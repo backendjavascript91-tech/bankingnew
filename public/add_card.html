@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>💳 Add Card - Crédit Agricole</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216')
+        no-repeat center center / cover;
+    }
+
+    /* ===== Navbar ===== */
+    .top-nav {
+      background-color: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 60px;
+      position: fixed;
+      top: 20px;
+      left: 3%;
+      border-radius: 12px;
+      width: 84%;
+      z-index: 1000;
+    }
+    .top-nav .logo img {
+  height: 55px;
+  cursor: pointer;
+}
+
+
+ .top-nav ul {
+  list-style: none;
+  display: flex;
+  gap: 40px;
+  margin-left: auto; /* بتزق اللينكات لليمين */
+}
+
+    .top-nav ul li a {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+
+    /* ===== Main ===== */
+   .main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* بدل center */
+  margin-top: 140px;       /* ⬅️ ينزل لتحت */
+}
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 40px 50px;
+      border-radius: 20px;
+      width: 420px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0b5134;
+      margin-bottom: 25px;
+    }
+
+    input, select {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 18px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background-color: #007b5e;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    button:hover {
+      background-color: #046b52;
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="top-nav">
+  <div class="logo">
+    <a href="home.html">
+     <img src="image/Picsart_25-10-01_17-11-01-636.png" alt="Logo">
+    </a>
+  </div>
+
+  <ul>
+    <li><a href="home.html">Home</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="contact.html">Contact</a></li>
+    <li><a href="login.html">Login</a></li>
+    <li><a href="register.html" class="signup">Sign Up</a></li>
+  </ul>
+</div>  <!-- ✅ ده اللي كان ناقص -->
+
+  <!-- Main -->
+  <div class="main">
+    <div class="form-container">
+
+      <h2>Add Your Card</h2>
+
+      <form id="cardForm">
+        <input type="text" id="cardName" placeholder="Card Holder Name" required>
+        <input type="text" id="accountNumber" placeholder="Account Number" required>
+
+        <select id="cardType" required>
+          <option value="">Select Card Type</option>
+          <option value="debit">Debit</option>
+          <option value="credit">Credit</option>
+        </select>
+
+        <input type="text" id="expiryDate" placeholder="MM/YY" required>
+        <input type="password" id="cvv" placeholder="CVV" required>
+        <input type="password" id="cardPassword" placeholder="Card Password" required>
+
+        <button type="submit">Save Card</button>
+      </form>
+
+    </div>
+  </div>
+
+  
+<script>
+document.getElementById("cardForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  // 1️⃣ هات المستخدم
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+  if (!user || !user._id) {
+    alert("❌ لازم تسجل دخول الأول");
+    window.location.href = "login.html";
+    return;
+  }
+
+  // 2️⃣ هات القيم من الـ inputs (بشكل صريح)
+  const payload = {
+    userId: user._id,
+    cardName: document.getElementById("cardName").value.trim(),
+    accountNumber: document.getElementById("accountNumber").value.trim(),
+    cardType: document.getElementById("cardType").value,
+    expiryDate: document.getElementById("expiryDate").value.trim(),
+    cvv: document.getElementById("cvv").value.trim(),
+    cardPassword: document.getElementById("cardPassword").value
+  };
+
+  // 3️⃣ Validation بسيط
+  for (let key in payload) {
+    if (!payload[key]) {
+      alert("⚠️ من فضلك املأ جميع الحقول");
+      return;
+    }
+  }
+
+  try {
+    // 4️⃣ ابعت البيانات
+    const res = await fetch("http://localhost:3000/add-card", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      alert(data.message || "❌ خطأ في إضافة الكارت");
+      return;
+    }
+
+    const cardData = {
+      userId: user._id,
+      cardName: payload.cardName,
+      accountNumber: payload.accountNumber,
+      expiryDate: payload.expiryDate,
+      cardType: payload.cardType
+    };
+
+
+    alert("✅ تم إضافة الكارت بنجاح");
+    window.location.href = "dashboard.html";
+
+    const existCard = await Card.findOne({ userId });
+if (existCard) {
+  return res.status(409).json({
+    message: "لديك كارت بالفعل"
+  });
+}
+
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ فشل الاتصال بالسيرفر");
+  }
+});
+</script>
+
+</body>
+</html>

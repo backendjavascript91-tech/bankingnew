@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>👤 Create Account - Crédit Agricole</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      height: 100vh;
+      display: flex;
+      background: url('https://images.unsplash.com/photo-1521791136064-7986c2920216')
+        no-repeat center center / cover;
+    }
+
+    /* ===== Navbar ===== */
+    .top-nav {
+      background-color: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 60px;
+      position: fixed;
+      top: 20px;
+      left: 3%;
+      border-radius: 12px;
+      width: 84%;
+      z-index: 1000;
+    }
+
+    .top-nav .logo img {
+      height: 55px;
+    }
+
+    .top-nav ul {
+      list-style: none;
+      display: flex;
+      gap: 50px;
+      margin-right: 50px;
+    }
+
+    .top-nav ul li a {
+      text-decoration: none;
+      color: black;
+      font-weight: bold;
+    }
+
+    .signup {
+      border: 2px solid black;
+      padding: 6px 12px;
+      border-radius: 8px;
+    }
+
+    /* ===== Main ===== */
+    .main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+
+    .form-container {
+      background-color: rgba(255, 255, 255, 0.95);
+      padding: 40px 50px;
+      border-radius: 20px;
+      width: 420px;
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.15);
+    }
+
+    h2 {
+      text-align: center;
+      color: #0b5134;
+      margin-bottom: 20px;
+    }
+
+    .step input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
+      font-size: 15px;
+    }
+
+    .nextBtn,
+    .btn {
+      width: 100%;
+      padding: 12px;
+      border-radius: 8px;
+      border: none;
+      background-color: #007b5e;
+      color: white;
+      font-size: 16px;
+      cursor: pointer;
+    }
+
+    .nextBtn:hover,
+    .btn:hover {
+      background-color: #046b52;
+    }
+
+    .checkbox {
+      margin-top: 15px;
+      font-size: 14px;
+      text-align: center;
+    }
+
+    .login {
+      text-align: center;
+      margin-top: 15px;
+      font-size: 14px;
+    }
+
+    .login a {
+      color: #007b5e;
+      font-weight: bold;
+      text-decoration: none;
+    }
+
+    #errorBox {
+      display: none;
+      background: #ffe0e0;
+      color: #900;
+      padding: 10px;
+      margin-bottom: 15px;
+      border-radius: 8px;
+      text-align: center;
+      font-size: 14px;
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- Navbar -->
+  <div class="top-nav">
+    <div class="logo">
+      <img src="image/Logo.png" alt="Logo">
+    </div>
+    <ul>
+      <li><a href="home.html">Home</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li><a href="login.html">Login</a></li>
+      <li><a href="register.html" class="signup">Sign Up</a></li>
+    </ul>
+  </div>
+
+  <!-- Main -->
+  <div class="main">
+    <div class="form-container">
+
+      <div id="errorBox"></div>
+
+      <form id="registerForm">
+        <h2>Create Your Account</h2>
+
+        <!-- Step 1 -->
+        <div class="step">
+          <input type="text" id="firstname" placeholder="First Name" required>
+          <input type="text" id="lastname" placeholder="Last Name" required>
+          <input type="text" id="username" placeholder="Username" required>
+          <button type="button" class="nextBtn">Next</button>
+        </div>
+
+        <!-- Step 2 -->
+        <div class="step" style="display:none">
+          <input type="text" id="nationalId" placeholder="National ID" required>
+          <button type="button" class="nextBtn">Next</button>
+        </div>
+
+        <!-- Step 3 -->
+        <div class="step" style="display:none">
+          <input type="email" id="email" placeholder="Email" required>
+          <input type="text" id="phonenumber" placeholder="Phone Number" required>
+          <button type="button" class="nextBtn">Next</button>
+        </div>
+
+        <!-- Step 4 -->
+        <div class="step" style="display:none">
+          <input type="password" id="password" placeholder="Password" required>
+          <input type="password" id="confirmPassword" placeholder="Confirm Password" required>
+          <button type="button" class="nextBtn">Next</button>
+        </div>
+
+        <!-- Step 5 -->
+        <div class="step" style="display:none">
+          <input type="date" id="dob" required>
+          <button type="submit" class="btn">Register</button>
+        </div>
+<button
+  type="button"
+  id="addCardBtn"
+  class="btn"
+  style="display:none; margin-top:10px; background:#0b5134;"
+>
+  Add Card
+</button>
+
+<button
+  type="button"
+  id="skipCardBtn"
+  class="btn"
+  style="display:none; margin-top:10px; background:#999;"
+>
+  Skip for now
+</button>
+
+
+        <div class="checkbox">
+          <input type="checkbox" required>
+          I agree to the <a href="#">Terms & Conditions</a>
+        </div>
+
+        <div class="login">
+          Already have an account? <a href="login.html">Log In</a>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+<script>
+const errorBox = document.getElementById("errorBox");
+
+function showError(msg) {
+  errorBox.style.display = "block";
+  errorBox.textContent = msg;
+}
+
+function clearError() {
+  errorBox.style.display = "none";
+  errorBox.textContent = "";
+}
+
+/* ===== Steps Logic ===== */
+const steps = document.querySelectorAll(".step");
+let currentStep = 0;
+
+steps.forEach((step, i) => {
+  step.style.display = i === 0 ? "block" : "none";
+});
+
+document.querySelectorAll(".nextBtn").forEach((btn, i) => {
+  btn.addEventListener("click", () => {
+    const inputs = steps[i].querySelectorAll("input");
+    let valid = true;
+
+    inputs.forEach(input => {
+      if (!input.value.trim()) valid = false;
+    });
+
+    if (!valid) {
+      showError("⚠️ من فضلك املأ جميع الحقول قبل المتابعة");
+      return;
+    }
+
+    steps[i].style.display = "none";
+    steps[i + 1].style.display = "block";
+    clearError();
+  });
+});
+
+/* ===== Submit Form ===== */
+document.getElementById("registerForm").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  clearError();
+
+  const firstName = document.getElementById("firstname").value.trim();
+  const lastName  = document.getElementById("lastname").value.trim();
+  const username  = document.getElementById("username").value.trim();
+  const nationalId = document.getElementById("nationalId").value.trim();
+  const email = document.getElementById("email").value.trim();
+  const phone = document.getElementById("phonenumber").value.trim();
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+  const dob = document.getElementById("dob").value;
+
+  /* ===== Validations ===== */
+  if (password !== confirmPassword) {
+    showError("❌ كلمة المرور غير متطابقة");
+    return;
+  }
+
+  const payload = {
+    firstName,
+    lastName,
+    username,
+    nationalId,
+    email,
+    phone,
+    password,
+    dob
+  };
+
+  console.log("Register Payload:", payload);
+
+  try {
+    const res = await fetch("http://localhost:3000/register", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    const data = await res.json();
+
+    if (!res.ok) {
+      showError(data.message || "❌ فشل إنشاء الحساب");
+      return;
+    }
+
+   const userData = {
+  _id: data.user._id,
+  firstName: data.user.firstName,
+  lastName: data.user.lastName,
+  username: data.user.username,
+  email: data.user.email,
+  phone: data.user.phone,
+  nationalId: data.user.nationalId,
+  dob: data.user.dob,        // ✅ السطر المهم
+  balance: data.user.balance ?? 0
+};
+
+localStorage.setItem("currentUser", JSON.stringify(userData));
+
+localStorage.setItem("currentUser", JSON.stringify(userData));
+
+   
+document.querySelector('button[type="submit"]').style.display = "none";
+
+// اخفاء كل خطوات التسجيل
+document.querySelectorAll(".step").forEach(step => {
+  step.style.display = "none";
+});
+
+// اخفاء الشروط واللينكات
+document.querySelector(".checkbox").style.display = "none";
+document.querySelector(".login").style.display = "none";
+
+// اظهار زرارين Add Card و Skip
+document.getElementById("addCardBtn").style.display = "block";
+document.getElementById("skipCardBtn").style.display = "block";
+
+
+  } catch (err) {
+    console.error(err);
+    showError("⚠️ فشل الاتصال بالسيرفر");
+  }
+});
+
+document.getElementById("addCardBtn").addEventListener("click", () => {
+  window.location.href = "add_card.html";
+});
+
+document.getElementById("skipCardBtn").addEventListener("click", () => {
+  window.location.href = "dashboard.html";
+});
+
+</script>
+
+
+
+</body>
+</html>

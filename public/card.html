@@ -1,0 +1,409 @@
+<!doctype html>
+<html lang="en" dir="ltr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Card Payment Page</title>
+
+  <style>
+    * {margin: 0; padding: 0; box-sizing: border-box;}
+    body {
+      font-family: 'Segoe UI', Tahoma, sans-serif;
+      background: url('https://www.firstbankeg.com/UserFiles/NewsSizes/1920/2023/09/24/17792.jpg?230924102238') center/cover no-repeat;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      padding: 25px;
+    }
+
+    .card-container {
+      width: 900px;
+      background: rgba(255,255,255,0.25);
+      border-radius: 14px;
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      backdrop-filter: blur(20px);
+      border: 1px solid rgba(255,255,255,0.3);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+      animation: fadeIn 1s ease;
+    }
+
+    @keyframes fadeIn {
+      from {opacity: 0; transform: translateY(25px);}
+      to {opacity: 1; transform: translateY(0);}
+    }
+
+    /* Fade Transition */
+    .fade {
+      opacity: 1;
+      transition: opacity 0.6s ease;
+    }
+
+    .fade.hidden {
+      opacity: 0;
+      pointer-events: none;
+      position: absolute;
+    }
+
+    .header {
+      padding: 18px 25px;
+      background: rgba(255,255,255,0.6);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid rgba(255,255,255,0.5);
+    }
+
+    .header img {height: 48px;}
+
+    .nav a {
+      text-decoration: none;
+      margin-left: 18px;
+      color: #064a31;
+      font-weight: 700;
+    }
+
+    .body {display: flex;}
+
+    .sidebar {
+  width: 200px;
+  background: rgba(247,251,249,0.6);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+
+   .sidebar .item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 12px;
+  border-radius: 8px;
+  font-weight: 600;
+  color: #0b6b4a;
+  text-decoration: none;   /* يشيل الخط */
+  transition: 0.3s;
+}
+  .sidebar .item:hover {
+  background: rgba(223,242,230,0.8);
+  transform: translateX(5px);
+}
+    .sidebar .item.active {
+  background: rgba(11,107,74,0.15);
+  box-shadow: 0 0 10px rgba(11,107,74,0.25);
+}
+.sidebar .item img {
+  width: 20px;
+  height: 20px;
+}
+
+    .main {flex: 1; padding: 30px;}
+
+    .credit-card {
+      width: 100%;
+      height: 220px;
+      border-radius: 16px;
+      background: linear-gradient(135deg, #0f6951, #0a3f2d);
+      color: #fff;
+      padding: 25px;
+      margin-bottom: 25px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      box-shadow: 0 5px 25px rgba(0,0,0,0.3);
+      animation: floatCard 3s infinite ease-in-out;
+    }
+
+    @keyframes floatCard {
+      0% {transform: translateY(0);}
+      50% {transform: translateY(-8px);}
+      100% {transform: translateY(0);}
+    }
+
+    .credit-card-number {
+      font-size: 24px;
+      letter-spacing: 3px;
+      margin-top: 10px;
+    }
+
+    .cc-bottom {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+    }
+
+    .payment-form {
+      background: rgba(255,255,255,0.8);
+      border-radius: 15px;
+      padding: 20px;
+      border: 1px solid #cfe7d6;
+      position: relative;
+      min-height: 260px;
+    }
+
+    .payment-form input {
+      width: 100%;
+      padding: 12px;
+      margin-bottom: 12px;
+      border-radius: 10px;
+      border: 1.8px solid #b8dbcb;
+      font-size: 15px;
+      transition: 0.3s;
+    }
+
+    .payment-form input:focus {
+      outline: none;
+      border-color: #0b6b4a;
+      box-shadow: 0 0 7px rgba(11,107,74,0.3);
+    }
+
+    .row {display: flex; gap: 15px;}
+
+    .payment-form button {
+      width: 100%;
+      padding: 14px;
+      border-radius: 10px;
+      background: #0b6b4a;
+      color: #fff;
+      font-size: 17px;
+      font-weight: 700;
+      border: none;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    .payment-form button:hover {
+      background: #0d8560;
+      transform: scale(1.03);
+    }
+    .payment-form button:hover {
+  background: #0d8560;
+  transform: scale(1.03);
+}
+/* ===== Card Details (Display like Profile) ===== */
+.profile-row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 0;
+  border-bottom: 1px solid #d9e8df;
+  font-size: 15px;
+}
+
+.profile-row:last-child {
+  border-bottom: none;
+}
+
+.profile-row .label {
+  font-weight: 600;
+  color: #064a31;
+}
+
+.profile-row .value {
+  color: #333;
+}
+.add-card-section {
+  margin-top: 25px;
+  text-align: center;
+}
+
+.add-card-full {
+  display: block;
+  width: 100%;
+  padding: 16px;
+  background: #0b6b4a;
+  color: #fff;
+  font-size: 17px;
+  font-weight: 700;
+  border-radius: 12px;
+  text-decoration: none;
+  transition: 0.3s;
+  box-shadow: 0 6px 15px rgba(11,107,74,0.25);
+}
+
+.add-card-full:hover {
+  background: #0d8560;
+  transform: translateY(-2px);
+}
+
+.no-card-text {
+  margin-top: 10px;
+  color: #064a31;
+  font-weight: 600;
+}
+
+
+  </style>
+</head>
+
+<body>
+
+  <div class="card-container">
+
+    <header class="header">
+      <img src="https://i.postimg.cc/QCrwp4pC/Picsart-25-10-01-17-11-01-636.png">
+      <nav class="nav">
+        <a href="#">About</a>
+        <a href="contact.html">Contact</a>
+        <a href="login.html">Login</a>
+        <a href="register.html">Register</a>
+      </nav>
+    </header>
+
+    <div class="body">
+<aside class="sidebar">
+
+  <a href="dashboard.html" class="item">
+    <img src="https://i.postimg.cc/Dyp5hp80/dashboard.png" width="20">
+    <span>Dashboard</span>
+  </a>
+
+  <a href="bank.html" class="item active">
+    <img src="https://i.postimg.cc/J06F91fn/arrows.png" width="20">
+    <span>Transfer</span>
+  </a>
+
+  <a href="card.html" class="item">
+    <img src="https://i.postimg.cc/h41c2ThY/debit-card.png" width="20">
+    <span>Card</span>
+  </a>
+
+  <a href="profile.html" class="item">
+    <img src="https://i.postimg.cc/0292vZLx/account.png" width="20">
+    <span>Profile</span>
+  </a>
+
+  <a href="#" class="item" id="logoutBtn">
+    <img src="https://i.postimg.cc/fycLKrpP/logout.png" width="20">
+    <span>Logout</span>
+  </a>
+
+</aside>
+
+      <main class="main">
+
+        <div class="credit-card">
+          <div>
+            <div style="font-size:18px;">VISA CARD</div>
+            <div class="credit-card-number" id="liveNumber">**** **** **** 5478</div>
+          </div>
+
+          <div class="cc-bottom">
+            <div>
+              <strong>NAME</strong><br> <span id="liveName">MARWAN</span>
+            </div>
+            <div>
+              <strong>EXP</strong><br> <span id="liveExp">12/29</span>
+            </div>
+          </div>
+        </div>
+
+       <div class="payment-form">
+  <h3 style="margin-bottom:15px; color:#064a31;">Card Details</h3>
+
+  <div class="profile-row">
+    <span class="label">Card Holder Name</span>
+    <span class="value" id="cardName">-</span>
+  </div>
+
+  <div class="profile-row">
+    <span class="label">Card Number</span>
+    <span class="value" id="cardNumber">-</span>
+  </div>
+
+  <div class="profile-row">
+    <span class="label">Expiry Date</span>
+    <span class="value" id="cardExpiry">-</span>
+  </div>
+
+  <div class="profile-row">
+    <span class="label">Card Type</span>
+    <span class="value" id="cardType">-</span>
+  </div>
+</div>
+
+<div class="add-card-section" id="addCardBox" style="display:none;">
+  <a href="add_card.html" class="add-card-full">
+    + Add Card
+  </a>
+
+  <p class="no-card-text">
+    You don't have a card yet
+  </p>
+</div>
+
+<script>
+document.addEventListener("DOMContentLoaded", async () => {
+const addCardBox = document.getElementById("addCardBox");
+
+  const user = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (!user || !user._id) {
+    alert("❌ لازم تسجل دخول الأول");
+    window.location.href = "login.html";
+    return;
+  }
+
+  // عناصر الكارت الأخضر
+  const liveName   = document.getElementById("liveName");
+  const liveNumber = document.getElementById("liveNumber");
+  const liveExp    = document.getElementById("liveExp");
+
+  // عناصر Card Details (زي البروفايل)
+const cardNameEl   = document.getElementById("cardName");
+const cardNumberEl = document.getElementById("cardNumber");
+const expDateEl    = document.getElementById("cardExpiry");
+const cardTypeEl   = document.getElementById("cardType");
+
+  try {
+    const res = await fetch(`http://localhost:3000/card/${user._id}`);
+    const data = await res.json();
+
+   if (!res.ok) {
+  liveName.textContent = "No Card";
+  liveNumber.textContent = "**** **** **** ****";
+  liveExp.textContent = "--/--";
+
+  cardNameEl.textContent = "-";
+  cardNumberEl.textContent = "-";
+  expDateEl.textContent = "-";
+  cardTypeEl.textContent = "-";
+
+  addCardBox.style.display = "block"; // 👈 يظهر الزرار
+  return;
+}
+
+
+    const card = data.card;
+
+    // ===== عرض البيانات =====
+
+    // الاسم
+    liveName.textContent = card.cardName;
+    cardNameEl.textContent = card.cardName;
+
+    // رقم الحساب (آخر 4)
+    const last4 = card.accountNumber.slice(-4);
+    liveNumber.textContent = "**** **** **** " + last4;
+    cardNumberEl.textContent = "**** **** **** " + last4;
+
+    // تاريخ الانتهاء
+    liveExp.textContent = card.expiryDate;
+    expDateEl.textContent = card.expiryDate;
+
+    // نوع الكارت
+    cardTypeEl.textContent = card.cardType;
+
+  } catch (err) {
+    console.error(err);
+    alert("❌ فشل تحميل بيانات الكارت");
+  }
+});
+</script>
+
+
+
+</body>
+</html>

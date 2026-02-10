@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>About | CA Bank</title>
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+
+<style>
+*{
+  box-sizing:border-box;
+  margin:0;
+  padding:0;
+  font-family:'Segoe UI',Tahoma,sans-serif;
+}
+
+body{
+  min-height:100vh;
+  background:url("https://www.firstbankeg.com/UserFiles/NewsSizes/1920/2023/09/24/17792.jpg") center/cover no-repeat;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+}
+
+.app{
+  width:1200px;
+  max-width:95%;
+  background:rgba(255,255,255,0.25);
+  backdrop-filter:blur(20px);
+  border-radius:18px;
+  box-shadow:0 10px 40px rgba(0,0,0,.25);
+  overflow:hidden;
+}
+
+/* HEADER */
+.header{
+  background:rgba(255,255,255,.65);
+  padding:16px 25px;
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+}
+
+.header img{height:50px}
+
+.header nav a{
+  text-decoration:none;
+  color:#064a31;
+  font-weight:600;
+  margin-left:18px;
+}
+
+/* LAYOUT */
+.main{
+  display:flex;
+}
+
+/* SIDEBAR */
+.sidebar{
+  width:220px;
+  background:rgba(245,245,245,.6);
+  padding:20px;
+}
+
+.sidebar a{
+  display:flex;
+  align-items:center;
+  gap:10px;
+  padding:12px;
+  margin-bottom:12px;
+  border-radius:10px;
+  text-decoration:none;
+  color:#0b6b4a;
+  font-weight:600;
+  transition:.3s;
+}
+
+.sidebar a:hover,
+.sidebar a.active{
+  background:rgba(11,107,74,.15);
+  transform:translateX(5px);
+}
+
+/* CONTENT */
+.content{
+  flex:1;
+  padding:30px;
+}
+
+/* GLASS BOX */
+.box{
+  background:rgba(255,255,255,.85);
+  border-radius:16px;
+  padding:25px;
+  margin-bottom:20px;
+  border:1px solid #cfe7d6;
+  animation:fadeUp .8s ease;
+}
+
+.box h2{
+  color:#0b6b4a;
+  margin-bottom:15px;
+}
+
+.box p{
+  color:#333;
+  line-height:1.8;
+  margin-bottom:10px;
+}
+
+.box ul{
+  margin-top:10px;
+  padding-left:20px;
+}
+
+.box ul li{
+  margin-bottom:8px;
+}
+
+/* ANIMATION */
+@keyframes fadeUp{
+  from{opacity:0;transform:translateY(20px)}
+  to{opacity:1;transform:none}
+}
+</style>
+</head>
+
+<body>
+
+<div class="app">
+
+  <!-- HEADER -->
+  <div class="header">
+    <img src="https://i.postimg.cc/QCrwp4pC/Picsart-25-10-01-17-11-01-636.png">
+    <nav>
+      <a href="dashboard.html">Home</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- SIDEBAR -->
+    <div class="sidebar">
+      <a href="dashboard.html"><i class="fa-solid fa-chart-line"></i> Dashboard</a>
+      <a href="bank.html"><i class="fa-solid fa-right-left"></i> Transfer</a>
+      <a href="atm.html"><i class="fa-solid fa-building-columns"></i> ATM</a>
+      <a href="card.html"><i class="fa-solid fa-credit-card"></i> Card</a>
+      <a href="profile.html"><i class="fa-solid fa-user"></i> Profile</a>
+      <a href="about.html" class="active"><i class="fa-solid fa-circle-info"></i> About</a>
+    </div>
+
+    <!-- CONTENT -->
+    <div class="content">
+
+      <div class="box">
+        <h2>About This Project</h2>
+        <p>
+          This Online Banking System is a full-stack web application
+          designed to simulate real banking operations in a secure
+          and modern way.
+        </p>
+      </div>
+
+      <div class="box">
+        <h2>Main Features</h2>
+        <ul>
+          <li>User Registration & Secure Login</li>
+          <li>ATM Withdraw & Deposit Operations</li>
+          <li>Bank Transfers</li>
+          <li>Card Management</li>
+          <li>Transaction History</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <h2>Technologies Used</h2>
+        <ul>
+          <li>HTML, CSS, JavaScript</li>
+          <li>Node.js & Express</li>
+          <li>MongoDB & Mongoose</li>
+          <li>JWT Authentication</li>
+        </ul>
+      </div>
+
+      <div class="box">
+        <h2>Purpose</h2>
+        <p>
+          The project was created for educational purposes to demonstrate
+          how modern online banking systems work, including authentication,
+          transactions, and database integration.
+        </p>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+</body>
+</html>

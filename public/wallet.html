@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>CA Bank Dashboard</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+body {
+  font-family: 'Segoe UI', Tahoma, sans-serif;
+  background: url('https://www.firstbankeg.com/UserFiles/NewsSizes/1920/2023/09/24/17792.jpg?230924102238') center/cover no-repeat;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.card {
+  width: 850px;
+  max-width: 100%;
+  background: rgba(255, 255, 255, 0.25);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255,255,255,0.3);
+  border-radius: 15px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  animation: fadeIn 1s ease-in-out;
+}
+
+@keyframes fadeIn {
+  from {opacity: 0; transform: translateY(30px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* Header */
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  background: rgba(234, 248, 240, 0.6);
+  padding: 16px 22px;
+  animation: slideDown 0.8s ease;
+}
+
+@keyframes slideDown {
+  from {transform: translateY(-20px); opacity: 0;}
+  to {transform: translateY(0); opacity: 1;}
+}
+
+.header .brand img {
+  height: 50px;
+  border-radius: 6px;
+  transition: transform 0.4s;
+}
+
+.header .brand img:hover {
+  transform: scale(1.1);
+}
+
+.nav a {
+  text-decoration: none;
+  color: #064a31;
+  font-weight: 600;
+  margin-left: 18px;
+  position: relative;
+  transition: color 0.3s;
+}
+
+.nav a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 2px;
+  background: #0b6b4a;
+  transition: width 0.3s;
+}
+
+.nav a:hover::after { width: 100%; }
+.nav a:hover { color: #0b6b4a; }
+
+/* Body layout */
+.body {
+  display: flex;
+  animation: fadeUp 1.2s ease;
+}
+
+@keyframes fadeUp {
+  from {opacity: 0; transform: translateY(20px);}
+  to {opacity: 1; transform: translateY(0);}
+}
+
+/* Sidebar */
+.sidebar {
+  width: 180px;
+  background: rgba(247, 251, 249, 0.6);
+  border-right: 2px solid rgba(213, 233, 219, 0.7);
+  padding: 20px 15px;
+  border-radius: 15px 0 0 15px;
+}
+
+.sidebar .item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-weight: 600;
+  color: #0b6b4a;
+  margin-bottom: 16px;
+  transition: all 0.3s;
+  border-radius: 8px;
+  padding: 8px;
+  cursor: pointer;
+}
+
+.sidebar .item img { width: 20px; height: 20px; }
+.sidebar .item:hover { background: rgba(223, 242, 230, 0.7); transform: translateX(5px);}
+.sidebar .item.active { background: rgba(11,107,74,0.12); box-shadow:0 0 10px rgba(11,107,74,0.25);}
+
+.sidebar a {
+  text-decoration: none;       /* يشيل الخط */
+  color: #0b6b4a;              /* يحافظ على نفس اللون */
+  display: flex;               /* يحافظ على تنسيق الصورة + النص */
+  align-items: center;
+  gap: 10px;
+}
+
+/* Main content */
+.main {
+  flex: 1;
+  padding: 25px;
+  animation: fadeUp 1.4s ease;
+  display: flex;
+  flex-direction: column;   /* ← ده اللي بيرجعهم فوق بعض */
+  gap: 20px;                /* اختياري لتنسيق المسافة */
+}
+
+
+
+.account-box {
+  background: rgba(255,255,255,0.8);
+  border: 1px solid #cfe7d6;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 20px;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.account-box:hover { transform: scale(1.02); box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+
+.send-box {
+  background: rgba(255,255,255,0.8);
+  border: 2px solid #cfe7d6;
+  border-radius: 20px;
+  padding: 20px;
+  animation: fadeUp 1.6s ease;
+}
+
+.icon-bar {
+  display: flex;
+  justify-content: space-around;
+  margin-bottom: 20px;
+}
+
+.icon-bar .icon {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 5px;
+  padding: 12px 20px;
+  border-radius: 12px;
+  transition: all 0.3s;
+  cursor: pointer;
+}
+
+.icon-bar .icon img { width: 45px; height: 45px; transition: transform 0.3s; }
+.icon-bar .icon:hover img { transform: scale(1.1); }
+.icon-bar .icon.active { background: rgba(11,107,74,0.12); box-shadow:0 0 10px rgba(11,107,74,0.25); }
+
+.icon-bar span { font-weight: 600; color:#064a31; }
+
+.send-box input {
+  width: 100%;
+  padding: 10px 12px;
+  margin-bottom: 12px;
+  border: 1.8px solid #b8dbcb;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: box-shadow 0.3s, border-color 0.3s;
+}
+
+.send-box input:focus { outline:none; border-color:#0b6b4a; box-shadow:0 0 6px rgba(11,107,74,0.3); }
+
+.send-box button {
+  width: 100%;
+  padding: 12px;
+  background:#0b6b4a;
+  color:#fff;
+  font-weight:700;
+  border:none;
+  border-radius:8px;
+  cursor:pointer;
+  transition: background 0.3s, transform 0.2s;
+  margin-top: 10px;
+}
+
+.send-box button:hover { background:#097043; transform:scale(1.03); }
+
+/* Step 2 for Next */
+.step-2 { display: none; }
+.confirm-details p { margin-bottom: 8px; color: #064a31; font-weight:600; }
+
+@media(max-width:720px){
+  .body { flex-direction: column; }
+  .sidebar { width:100%; display:flex; justify-content:space-around; border-right:none; border-bottom:2px solid rgba(213,233,219,0.7); }
+}
+
+</style>
+</head>
+<body>
+
+<div class="card">
+  <header class="header">
+    <div class="brand">
+      <a href="dashboard.html">
+        <img src="https://i.postimg.cc/QCrwp4pC/Picsart-25-10-01-17-11-01-636.png" alt="CA Bank Logo">
+      </a>
+    </div>
+    <nav class="nav">
+      <a href="#">About</a>
+      <a href="contact.html">Contact</a>
+      <a href="login.html">Login</a>
+      <a href="register.html">Sign Up</a>
+    </nav>
+  </header>
+<div class="body">
+  <aside class="sidebar">
+    <a class="item" href="dashboard.html">
+      <img src="image/layout.png"alt="Dashboard">
+      <span>Dashboard</span>
+    </a>
+
+    <a class="item active" href="bank.html">
+      <img src="image/arrows.png" alt="Transfer">
+      <span>Transfer</span>
+    </a>
+
+    <a class="item" href="card.html">
+      <img src="image/card.png" alt="Card">
+      <span>Card</span>
+    </a>
+
+    <a class="item" href="profile.html">
+      <img src="image/account.png" alt="Profile">
+      <span>Profile</span>
+    </a>
+
+    <a class="item" href="login.html" id="logoutLink">
+      <img src="image/logout.png"  alt="Logout">
+      <span>Logout</span>
+    </a>
+  </aside>
+
+<main class="main">
+  <section class="account-box">
+   <h3>Account Details</h3>
+    <p>username: <span id="userNameDisplay"></span></p>
+    <p>account : <span id="accountNumberDisplay"></span></p>
+  </section>
+
+  <section class="send-box">
+  <div class="icon-bar">
+    <a class="icon" href="bank.html">
+      <img src="https://i.postimg.cc/4ytt1NLd/mobile-banking-1.png" alt="Bank">
+      <span>Bank</span>
+    </a>
+
+    <a class="icon active" href="wallet.html">
+      <img src="https://i.postimg.cc/G2Tscm1J/wallet-1.png" alt="Wallet">
+      <span>Wallet</span>
+    </a>
+
+    <a class="icon" href="atm.html">
+      <img src="https://i.postimg.cc/6Q97GhJk/atm-machine.png" alt="ATM">
+      <span>ATM</span>
+    </a>
+  </div>
+
+
+
+    <h4>Send Money</h4>
+
+    <form id="step1">
+      <input type="text" placeholder="Wallet Number" required>
+      <input type="number" placeholder="Amount" required>
+      <button type="submit">Next</button>
+    </form>
+
+    <form id="step2" class="step-2">
+      <input type="password" placeholder="Password" required>
+      <h4>Confirm Transfer</h4>
+      <div class="confirm-details"></div>
+      <button type="button" id="backBtn">Back</button>
+      <button type="submit">Submit</button>
+    </form>
+  </section>
+  
+</main>
+
+  </div>
+</div>
+
+<script>
+
+  // ================================
+  // 1) عرض بيانات اليوزر بعد اللوجن
+  // ================================
+  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
+
+  if (currentUser) {
+
+    // إخفاء رقم الحساب
+    function maskAccountNumber(acct) {
+      if (!acct) return "No Account";
+      const s = String(acct).trim();
+      if (s.length <= 4) return s;
+      const last4 = s.slice(-4);
+      const stars = "*".repeat(s.length - 4);
+      return stars + last4;
+    }
+
+    // عرض الاسم
+   document.getElementById("userNameDisplay").textContent =
+  `${currentUser.firstName} ${currentUser.lastName}`;
+
+
+    // عرض رقم الحساب المخفي
+  // 🟢 جلب رقم الحساب من الكارت
+(async () => {
+  try {
+    const res = await fetch(
+      `http://localhost:3000/card/${currentUser._id}`
+    );
+
+    if (res.ok) {
+      const data = await res.json();
+
+      function maskAccountNumber(acct) {
+        const s = String(acct);
+        if (s.length <= 4) return s;
+        return "*".repeat(s.length - 4) + s.slice(-4);
+      }
+
+      document.getElementById("accountNumberDisplay").textContent =
+        maskAccountNumber(data.card.accountNumber);
+    } else {
+      document.getElementById("accountNumberDisplay").textContent =
+        "No Account";
+    }
+  } catch (err) {
+    console.error(err);
+    document.getElementById("accountNumberDisplay").textContent =
+      "No Account";
+  }
+})();
+
+  }
+
+
+  // ================================
+  // 2) باقي كود التحويل (Wallet Steps)
+  // ================================
+  const step1 = document.getElementById('step1');
+  const step2 = document.getElementById('step2');
+  const confirmDiv = step2.querySelector('.confirm-details');
+  const backBtn = document.getElementById('backBtn');
+
+  step1.addEventListener('submit', function(e){
+    e.preventDefault();
+
+    const data = {};
+    [...step1.elements].forEach(el => { 
+      if(el.tagName === 'INPUT') data[el.placeholder] = el.value; 
+    });
+    
+    confirmDiv.innerHTML = '';
+    for (let key in data){
+      const p = document.createElement('p');
+      p.textContent = `${key}: ${data[key]}`;
+      confirmDiv.appendChild(p);
+    }
+    
+    step1.style.display = 'none';
+    step2.style.display = 'block';
+  });
+
+  backBtn.addEventListener('click', function(){
+    step2.style.display = 'none';
+    step1.style.display = 'block';
+  });
+
+  step2.addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const walletNumber = step1.querySelector('input[placeholder="Wallet Number"]').value;
+  const amount = step1.querySelector('input[placeholder="Amount"]').value;
+  const password = step2.querySelector('input[type="password"]').value;
+
+  // 1️⃣ تحقق من باسورد الكارت
+  const check = await fetch("http://localhost:3000/transfer/check-card-password", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: currentUser._id,
+      password
+    })
+  });
+
+  const checkResult = await check.json();
+  if (!check.ok) {
+    alert(checkResult.message || "Password incorrect");
+    return;
+  }
+
+  // 2️⃣ تنفيذ تحويل المحفظة
+  const res = await fetch("http://localhost:3000/transfer/wallet-transfer", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      userId: currentUser._id,
+      walletNumber,
+      amount
+    })
+  });
+
+  const data = await res.json();
+
+  if (!res.ok) {
+    alert(data.message || "Transfer failed");
+    return;
+  }
+
+  // 3️⃣ تحديث الرصيد
+  currentUser.balance = data.newBalance;
+  localStorage.setItem("currentUser", JSON.stringify(currentUser));
+
+  alert("✅ Wallet transfer successful");
+
+  step2.reset();
+  step2.style.display = "none";
+  step1.style.display = "block";
+  step1.reset();
+});
+
+
+</script>
+
+</body>
+</html> 
