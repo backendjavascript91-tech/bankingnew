@@ -127,6 +127,12 @@ app.post("/register", async (req, res) => {
       password,
       dob
     } = req.body;
+// National ID must be exactly 14 digits
+if (!/^\d{14}$/.test(nationalId)) {
+  return res.status(400).json({
+    message: "National ID must be exactly 14 digits"
+  });
+}
 
     if (
       !firstName || !lastName || !nationalId ||
