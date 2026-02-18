@@ -310,7 +310,11 @@
 
   <div class="profile-row">
     <span class="label">Card Number</span>
-    <span class="value" id="cardNumber">-</span>
+    <span class="value">
+  <span id="cardNumber">-</span>
+  <button id="toggleCard" style="margin-left:10px;">👁</button>
+</span>
+
   </div>
 
   <div class="profile-row">
@@ -341,7 +345,7 @@ const addCardBox = document.getElementById("addCardBox");
   const user = JSON.parse(localStorage.getItem("currentUser"));
 
   if (!user || !user._id) {
-    alert("❌ لازم تسجل دخول الأول");
+    alert(" log in first");
     window.location.href = "login.html";
     return;
   }
@@ -377,17 +381,34 @@ const cardTypeEl   = document.getElementById("cardType");
 
 
     const card = data.card;
+let fullCardNumber = card.accountNumber;
+let isVisible = false;
 
-    // ===== عرض البيانات =====
+const last4 = fullCardNumber.slice(-4);
 
-    // الاسم
-    liveName.textContent = card.cardName;
-    cardNameEl.textContent = card.cardName;
+// عرض افتراضي بالنجوم
+liveNumber.textContent = "**** **** **** " + last4;
+cardNumberEl.textContent = "**** **** **** " + last4;
 
-    // رقم الحساب (آخر 4)
-    const last4 = card.accountNumber.slice(-4);
+// زرار الإظهار
+document.getElementById("toggleCard").addEventListener("click", function () {
+
+  if (!isVisible) {
+    liveNumber.textContent = fullCardNumber;
+    cardNumberEl.textContent = fullCardNumber;
+    document.getElementById("toggleCard").textContent = "hide number";
+    isVisible = true;
+  } else {
     liveNumber.textContent = "**** **** **** " + last4;
     cardNumberEl.textContent = "**** **** **** " + last4;
+    document.getElementById("toggleCard").textContent = "show num";
+    isVisible = false;
+  }
+
+});
+
+
+
 
     // تاريخ الانتهاء
     liveExp.textContent = card.expiryDate;
@@ -398,7 +419,7 @@ const cardTypeEl   = document.getElementById("cardType");
 
   } catch (err) {
     console.error(err);
-    alert("❌ فشل تحميل بيانات الكارت");
+    alert(" failed to load cart data");
   }
 });
 </script>

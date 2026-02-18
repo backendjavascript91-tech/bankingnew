@@ -316,6 +316,28 @@ form#step1 select:focus {
 .select2-container {
     margin-bottom: 12px; /* نفس المسافة بين الحقول */
 }
+.form-message {
+  display: none;
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 14px;
+  text-align: center;
+  font-weight: bold;
+  transition: 0.3s ease;
+}
+
+.form-message.success {
+  background: #d4edda;
+  color: #155724;
+  border: 1px solid #c3e6cb;
+}
+
+.form-message.error {
+  background: #f8d7da;
+  color: #721c24;
+  border: 1px solid #f5c6cb;
+}
 
 
   </style>
@@ -433,12 +455,17 @@ form#step1 select:focus {
   <!-- STEP 3 (PASSWORD CONFIRMATION) -->
 <form id="stepPwd" class="step-pwd" style="display:none;">
   <h4>Enter Password to Confirm</h4>
+
   <input type="password" id="pwd" placeholder="Password" required>
   <input type="password" id="pwdConfirm" placeholder="Confirm Password" required>
-  <p id="pwdError" style="color:red; font-size:14px;"></p>
+
+  <div id="bankMessage" class="atm-message"></div>
+
   <button type="button" id="pwdBack">Back</button>
   <button type="submit">Confirm Transfer</button>
 </form>
+
+
 
   </section>
 </main>
@@ -455,9 +482,23 @@ form#step1 select:focus {
 ====================================================== */
 const currentUser = JSON.parse(localStorage.getItem("currentUser") || "null");
  if (!currentUser || !currentUser._id) {
-  alert("لازم تسجل دخول الأول");
+  showBankMessage("Please log in first", "error");
   window.location.href = "login.html";
 }
+function showBankMessage(text, type) {
+  const msg = document.getElementById("bankMessage");
+
+  msg.textContent = text;
+  msg.className = "form-message " + type;
+  msg.style.display = "block";
+
+  if (type === "error") {
+    setTimeout(() => {
+      msg.style.display = "none";
+    }, 6000);
+  }
+}
+
 if (currentUser) {
   function maskAccountNumber(acct) {
     if (!acct) return "No Account";
@@ -521,7 +562,7 @@ const pwdBack = document.getElementById("pwdBack");
 
 const pwd = document.getElementById("pwd");
 const pwdConfirm = document.getElementById("pwdConfirm");
-const pwdError = document.getElementById("pwdError");
+
 
 // قراءة القيم من الخطوة الأولى
 function getTransferValues() {
@@ -542,7 +583,7 @@ step1.addEventListener("submit", function (e) {
   const data = getTransferValues();
 
   if (!data.bank || !data.beneficiaryName || !data.beneficiaryAccount || !data.amount) {
-    alert("Please fill all fields.");
+    showBankMessage("Please fill all fields.", "error");
     return;
   }
 
@@ -592,11 +633,13 @@ console.log("CONFIRM TRANSFER CLICKED");
 
   // تأكد إن الباسوردات متطابقة
   if (pwd.value !== pwdConfirm.value) {
-    pwdError.textContent = "Passwords do not match!";
+    showBankMessage("password do not match");
+
     return;
   }
 
-  pwdError.textContent = "";
+  showBankMessage("No card found", "error");
+
 
   // تحقق الباسورد من الباك اند
   const check = await fetch("http://localhost:3000/transfer/check-card-password", {
@@ -612,7 +655,7 @@ console.log("CONFIRM TRANSFER CLICKED");
   const checkResult = await check.json();
 
   if (!check.ok) {
-    pwdError.textContent = checkResult.message;
+    showBankMessage(checkResult.message || "Password incorrect", "error");
     return;
   }
 
@@ -630,7 +673,8 @@ console.log("CONFIRM TRANSFER CLICKED");
   const transResult = await transfer.json();
 
  if (!transfer.ok) {
-  pwdError.textContent = transResult.message || "Transfer failed.";
+ showBankMessage(transResult.message || "Transfer failed.", "error");
+
   return;
 }
 
@@ -638,7 +682,7 @@ console.log("CONFIRM TRANSFER CLICKED");
 currentUser.balance = transResult.newBalance;
 localStorage.setItem("currentUser", JSON.stringify(currentUser));
 
-alert("Transfer Successful!");
+showBankMessage("Transfer Successful!", "success");
 stepPwd.reset();
 stepPwd.style.display = "none";
 step1.style.display = "block";

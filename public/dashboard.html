@@ -266,7 +266,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const stored = localStorage.getItem("currentUser");
 
   if (!stored) {
-    alert("⚠️ لازم تسجل الدخول أولاً");
+    alert("log in first");
     window.location.href = "login.html";
     return;
   }
@@ -274,7 +274,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   const localUser = JSON.parse(stored);
 
   if (!localUser._id) {
-    alert("بيانات المستخدم غير كاملة");
+    alert("incomplete user data");
     window.location.href = "login.html";
     return;
   }
@@ -331,7 +331,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
 } catch (err) {
   console.error(err);
-  alert("حصل خطأ في تحميل البيانات");
+  alert("error to loade data");
 }
 
 
@@ -343,7 +343,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   const stored = localStorage.getItem("currentUser");
   if (!stored) {
-    alert("لازم تسجل الدخول");
+    alert("log in first");
     window.location.href = "login.html";
     return;
   }
@@ -396,7 +396,7 @@ document.addEventListener("DOMContentLoaded", async () => {
 
   } catch (err) {
     console.error(err);
-    alert("حصل خطأ في تحميل العمليات");
+    alert("error loading");
   }
 });
 </script>

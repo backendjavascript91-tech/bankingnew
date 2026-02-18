@@ -294,12 +294,14 @@ app.post("/transfer/check-card-password", async (req, res) => {
   try {
     const card = await Card.findOne({ userId });
     if (!card) {
-      return res.status(404).json({ message: "لا يوجد كارت" });
+     return res.status(404).json({ message: "No card found" });
+
     }
 
     const match = await bcrypt.compare(password, card.cardPassword);
     if (!match) {
-      return res.status(400).json({ message: "باسورد الكارت غلط" });
+     return res.status(400).json({ message: "Incorrect card password" });
+
     }
 
     res.json({ message: "ok" });
@@ -330,7 +332,7 @@ app.post("/transfer/bank-transfer", async (req, res) => {
 
     const transferAmount = Number(amount);
     if (sender.balance < transferAmount) {
-      return res.status(400).json({ message: "الرصيد غير كافي" });
+     return res.status(400).json({ message: "Insufficient balance" });
     }
 
     // 3️⃣ جلب كارت المستفيد عن طريق رقم الحساب
