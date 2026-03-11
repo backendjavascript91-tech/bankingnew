@@ -552,7 +552,7 @@ app.post("/contact", async (req, res) => {
 app.use(express.static("public"));
 
 app.get("/", (req, res) => {
-  res.sendFile("home.html", { root: "public" });
+  res.redirect("/home.html");
 });
 
 // ✅ مهم لـ Playwright
