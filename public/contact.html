@@ -299,6 +299,7 @@ button:hover {
   </div>
 </div>
 <script>
+  const API_URL = "https://online-banking-system-production-fb01.up.railway.app";
 document.querySelector("form").addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -307,7 +308,7 @@ document.querySelector("form").addEventListener("submit", async function(e) {
   const email = document.getElementById("email").value;
   const message = document.getElementById("message").value;
 
-  const res = await fetch("http://localhost:3000/contact", {
+  const res = await fetch(`${API_URL}/contact`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

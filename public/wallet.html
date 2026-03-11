@@ -411,6 +411,7 @@ Go to Dashboard
 </div>
 
 <script>
+  const API_URL = "https://online-banking-system-production-fb01.up.railway.app";
 function showWalletMessage(text, type) {
   const msg = document.getElementById("walletMessage");
 
@@ -448,9 +449,8 @@ function showWalletMessage(text, type) {
   // 🟢 جلب رقم الحساب من الكارت
 (async () => {
   try {
-    const res = await fetch(
-      `http://localhost:3000/card/${currentUser._id}`
-    );
+    const res = await fetch(`${API_URL}/card/${currentUser._id}`)
+    
 
     if (res.ok) {
       const data = await res.json();
@@ -558,7 +558,7 @@ step2.addEventListener("submit", async function (e) {
   const password = step2.querySelector('input[type="password"]').value;
 
   // 1️⃣ تحقق الباسورد
-  const check = await fetch("http://localhost:3000/transfer/check-card-password", {
+  const check = await fetch(`${API_URL}/transfer/check-card-password`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({
@@ -574,7 +574,7 @@ step2.addEventListener("submit", async function (e) {
   }
 
   // 2️⃣ تنفيذ التحويل
-  const res = await fetch("http://localhost:3000/transfer/wallet-transfer", {
+  const res = await fetch(`${API_URL}/transfer/wallet-transfer`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
     body: JSON.stringify({

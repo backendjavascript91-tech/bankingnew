@@ -559,9 +559,7 @@ Mashreq Bank
   </div>
   
 <script>
-
- 
-
+const API_URL = "https://online-banking-system-production-fb01.up.railway.app";
 /* ======================================================
    عرض بيانات المستخدم من localStorage
 ====================================================== */
@@ -603,9 +601,7 @@ function showBankMessage(text, type) {
   // جلب رقم الحساب من الكارت
   (async () => {
     try {
-      const res = await fetch(
-        `http://localhost:3000/card/${currentUser._id}`
-      );
+      const res = await fetch(`${API_URL}/card/${currentUser._id}`);
 
       if (res.ok) {
         const data = await res.json();
@@ -737,7 +733,7 @@ showBankMessage("", "success");
 
   try {
 
-    const check = await fetch("http://localhost:3000/transfer/check-card-password", {
+    const check = await fetch(`${API_URL}/transfer/check-card-password`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
@@ -766,7 +762,7 @@ if (data.transferType === "external") {
   bodyData.bank = data.bank;
 }
 
-const transfer = await fetch("http://localhost:3000/transfer/bank-transfer", {
+const transfer = await fetch(`${API_URL}/transfer/bank-transfer`, {
   method: "POST",
   headers: { "Content-Type": "application/json" },
   body: JSON.stringify(bodyData)

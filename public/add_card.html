@@ -177,9 +177,9 @@
     </div>
   </div>
 
-  
-<script>
 
+<script>
+const API_URL = "https://online-banking-system-production-fb01.up.railway.app";
 document.getElementById("cardForm").addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -204,7 +204,7 @@ if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
 }
   try {
 
-    const response = await fetch("http://localhost:3000/add-card", {
+    const response = await fetch(`${API_URL}/add-card`,{
       method: "POST",
       headers: {
         "Content-Type": "application/json"

@@ -6,7 +6,7 @@ import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import Transaction from "./models/Transaction.js";
 
-const JWT_SECRET = "secret_key_must_change_in_prod";
+const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
 const JWT_EXPIRES = "6h";
 const SALT_ROUNDS = 10;
 
