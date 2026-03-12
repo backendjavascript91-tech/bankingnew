@@ -59,20 +59,20 @@
     }
 
     /* ✅ Login Box */
-    .login-box {
-      background: rgba(255, 255, 255, 0.2);
-      padding: 60px 50px;
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.25);
-      width: 90%;
-      max-width: 600px;
-      max-width: 90%;
-      text-align: center;
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border: 1px solid rgba(255, 255, 255, 0.3);
-      margin-top: 180px;
-    }
+   .login-box {
+  background: rgba(255, 255, 255, 0.2);
+  padding: 60px 50px;
+  border-radius: 20px;
+  box-shadow: 0 8px 25px rgba(0,0,0,0.25);
+
+  width: 90%;
+  max-width: 600px;
+
+  text-align: center;
+  backdrop-filter: blur(15px);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  margin-top: 180px;
+}
 
     .login-box h2 {
       margin-bottom: 30px;
@@ -226,20 +226,21 @@
 @media (max-width:768px){
 
 .top-nav{
+padding:10px 15px;
 flex-direction:column;
-gap:10px;
-padding:10px;
+align-items:center;
 }
 
 .top-nav ul{
-flex-direction:column;
-gap:10px;
-text-align:center;
+flex-wrap:wrap;
+justify-content:center;
+gap:15px;
 }
 
 .login-box{
-margin-top:140px;
-padding:40px 25px;
+width:95%;
+margin-top:150px;
+padding:35px 20px;
 }
 
 .login-box h2{
@@ -248,16 +249,16 @@ font-size:24px;
 
 .input-group input{
 font-size:16px;
-padding:15px 45px;
+padding:14px 45px;
 }
 
 .login-btn{
-font-size:20px;
-padding:15px;
+font-size:18px;
+padding:14px;
 }
 
 .register{
-font-size:18px;
+font-size:16px;
 }
 
 }
