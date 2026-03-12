@@ -199,12 +199,16 @@ if (existUser) {
       message: "login successfully ",
       user: userSafe,
     });
-  } catch (err) {
-    console.error(err);
-    res.status(500).json({ message: "server error" });
-  }
-});
-
+  
+  }catch (err) {
+  console.error("REGISTER ERROR:", err);
+  res.status(500).json({
+    message: "server error",
+    error: err.message
+  
+  });
+}
+});   
 // -------- Login --------
 app.post("/login", async (req, res) => {
   try {
