@@ -309,7 +309,6 @@
 
 
 <script>
-const API_URL = "https://online-banking-system-production-fb01.up.railway.app";
 const errorBox = document.getElementById("errorBox");
 
 
@@ -462,7 +461,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
 try {
 
-  const res = await fetch(`${API_URL}register`, {
+  const res = await fetch(`/register`, {
     method: "POST",
     headers: {
       "Content-Type": "application/json"
