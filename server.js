@@ -38,7 +38,9 @@ mongoose.connect(mongo, {
 });
 // Middlewares
 app.use(cors({
-  origin: "*",
+  origin: [
+    "https://online-banking-system-production-7e1f.up.railway.app"
+  ],
   methods: ["GET","POST","PUT","DELETE","OPTIONS"],
   allowedHeaders: ["Content-Type","Authorization"]
 }));
