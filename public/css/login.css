@@ -227,14 +227,18 @@
 
 .top-nav{
 padding:10px 15px;
-flex-direction:column;
+flex-direction:row;
 align-items:center;
 }
 
 .top-nav ul{
-flex-wrap:wrap;
-justify-content:center;
-gap:15px;
+flex-direction:row;
+gap:10px;
+flex-wrap:nowrap;
+}
+
+.top-nav ul li a{
+font-size:14px;
 }
 
 .login-box{
