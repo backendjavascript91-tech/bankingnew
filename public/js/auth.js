@@ -2,10 +2,6 @@ const errorBox = document.getElementById("errorBox");
 
 
 
-function clearError() {
-  errorBox.style.display = "none";
-  errorBox.textContent = "";
-}
 
 /* ===== Steps Logic ===== */
 const steps = document.querySelectorAll(".step");
@@ -106,13 +102,10 @@ function showSuccess(text) {
 
 function clearError() {
   const messageDiv = document.getElementById("registerMessage");
-
-  // امسح بس لو كانت رسالة خطأ
   if (messageDiv.classList.contains("error")) {
     messageDiv.style.display = "none";
   }
 }
-
 
 /* ===== Submit Form ===== */
 document.getElementById("registerForm").addEventListener("submit", async (e) => {
@@ -134,6 +127,10 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
     showError("password does not match");
     return;
   }
+  if (!email.includes("@")) {
+  showError("Invalid email");
+  return;
+}
 
   const payload = {
     firstName,
@@ -157,18 +154,14 @@ try {
     },
     body: JSON.stringify(payload)
   });
+let data;
 
-  const text = await res.text();
-  console.log("SERVER RESPONSE:", text);
-
-  let data;
-  try {
-    data = JSON.parse(text);
-  } catch {
-    data = { message: text };
-  }
-
-  if (!res.ok) {
+try {
+  data = await res.json();
+} catch {
+  showError("Invalid server response");
+  return;
+}  if (!res.ok) {
     showError(data.message || "error creating account");
     return;
   }

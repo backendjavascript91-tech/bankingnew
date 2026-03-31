@@ -1,15 +1,5 @@
 
-function togglePassword() {
-  const passwordInput = document.getElementById("password");
 
-  if (!passwordInput) return;
-
-  if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-  } else {
-    passwordInput.type = "password";
-  }
-}
 
 
 document.addEventListener("DOMContentLoaded", () => {
@@ -37,8 +27,8 @@ document.addEventListener("DOMContentLoaded", () => {
     const password = document.getElementById("password").value.trim();
 
     if (!usernameInput || !password) {
-      alert("please fill all fields");
-      return;
+      showLoginMessage("Please fill all fields", "error");     
+ return;
     }
 
     try {
@@ -49,8 +39,14 @@ document.addEventListener("DOMContentLoaded", () => {
 
       });
 
-      const data = await response.json();
+let data;
 
+try {
+  data = await response.json();
+} catch {
+  showLoginMessage("Invalid server response", "error");
+  return;
+}
       if (!response.ok) {
         showLoginMessage(data.message || "Username or password is incorrect", "error");
         return;
@@ -90,8 +86,7 @@ function togglePassword() {
 
   if (passwordInput.type === "password") {
     passwordInput.type = "text";
-    eyeIcon.classList.remove("fa-eye");
-    eyeIcon.classList.add("fa-eye-slash");
+    eyeIcon.classList.replace("fa-eye", "fa-eye-slash");
   } else {
     passwordInput.type = "password";
     eyeIcon.classList.remove("fa-eye-slash");
