@@ -26,12 +26,7 @@ const limiter = rateLimit({
     app.use(express.static("public"));
     app.use(helmet());
     app.disable("x-powered-by");
-app.use((req, res, next) => {
-  if (req.headers["x-forwarded-proto"] !== "https") {
-    return res.redirect("https://" + req.headers.host + req.url);
-  }
-  next();
-});
+
 
 const mongo = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/onlineBankingDB";
     console.log("MongoDB connecting...");
