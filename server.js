@@ -28,6 +28,13 @@ const limiter = rateLimit({
     app.disable("x-powered-by");
 
 
+mongoose.connect(process.env.MONGO_URI)
+.then(() => {
+  console.log("MongoDB Connected ✅");
+})
+.catch((err) => {
+  console.error("MongoDB Error ❌:", err);
+});
      
     // Middlewares
   
@@ -168,9 +175,9 @@ const limiter = rateLimit({
       return res.status(400).json({ message: "Invalid mobile number" });
     }
 
-    // const existUser = await User.findOne({
-    //   $or: [{ username }, { email }],
-    // });
+    const existUser = await User.findOne({
+      $or: [{ username }, { email }],
+    });
 
     if (existUser) {
       return res
