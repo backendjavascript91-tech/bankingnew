@@ -28,8 +28,6 @@ const limiter = rateLimit({
     app.disable("x-powered-by");
 
 
-const mongo = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/onlineBankingDB";
-    console.log("MongoDB connecting...");
      
     // Middlewares
   
@@ -170,9 +168,9 @@ const mongo = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/onlineBankingD
       return res.status(400).json({ message: "Invalid mobile number" });
     }
 
-    const existUser = await User.findOne({
-      $or: [{ username }, { email }],
-    });
+    // const existUser = await User.findOne({
+    //   $or: [{ username }, { email }],
+    // });
 
     if (existUser) {
       return res
@@ -592,16 +590,3 @@ if (user.loginAttempts >= 4) {
 
 
 
-mongoose.connect(mongo)
-    .then(() => {
-
-      console.log("MongoDB connected");
-
-      app.listen(PORT, () => {
-        console.log(`Server running on port ${PORT}`);
-      });
-
-    })
-    .catch((err) => {
-      console.error("Mongo connection error:", err);
-    });
