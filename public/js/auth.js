@@ -71,10 +71,10 @@ if (currentStep === 3) {
     return;
   }
 
-  if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
-    showError("Weak password");
-    return;
-  }
+  // if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
+  //   showError("Weak password");
+  //   return;
+  // }
 }
 
 // STEP 5 (Age)
@@ -172,10 +172,10 @@ if (password !== confirmPassword) {
 }
 
 // 2️⃣ الباسورد القوي
-if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
-  showError("Password must be strong (uppercase, lowercase, number, symbol, min 8)");
-  return;
-}
+// if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
+//   showError("Password must be strong (uppercase, lowercase, number, symbol, min 8)");
+//   return;
+// }
 
 // 3️⃣ الإيميل
 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
