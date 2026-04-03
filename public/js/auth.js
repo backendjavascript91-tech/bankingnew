@@ -21,39 +21,81 @@ function showStep(index) {
 document.querySelectorAll(".nextBtn").forEach((btn) => {
   btn.addEventListener("click", () => {
 
-    const inputs = steps[currentStep].querySelectorAll("input");
-    let valid = true;
+   // 🧠 validation حسب كل step
 
-    // 1️⃣ تحقق إن الحقول مش فاضية
-    inputs.forEach(input => {
-      if (!input.value.trim()) valid = false;
-    });
+// STEP 1
+if (currentStep === 0) {
+  const first = document.getElementById("firstname").value.trim();
+  const last = document.getElementById("lastname").value.trim();
+  const user = document.getElementById("username").value.trim();
 
-    if (!valid) {
-      showError("please fill in all blanks");
-      return;
-    }
+  if (!first || !last || !user) {
+    showError("Fill all fields");
+    return;
+  }
+}
 
-    // 2️⃣ تحقق National ID (Step 2)
-    if (currentStep === 1) {
-      const nationalId = document.getElementById("nationalId").value;
+// STEP 2 (National ID)
+if (currentStep === 1) {
+  const nationalId = document.getElementById("nationalId").value;
 
-      if (!/^\d{14}$/.test(nationalId)) {
-        showError("ID must be 14 digits");
-        return;
-      }
-    }
+  if (!/^\d{14}$/.test(nationalId)) {
+    showError("ID must be 14 digits");
+    return;
+  }
+}
 
-    // 3️⃣ تحقق الباسورد (Step 4)
-    if (currentStep === 3) {
-      const password = document.getElementById("password").value;
-      const confirmPassword = document.getElementById("confirmPassword").value;
+// STEP 3 (Email + Phone)
+if (currentStep === 2) {
+  const email = document.getElementById("email").value;
+  const phone = document.getElementById("phonenumber").value;
 
-      if (password !== confirmPassword) {
-        showError("password does not match");
-        return;
-      }
-    }
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+    showError("Invalid email");
+    return;
+  }
+
+  if (!/^01[0-9]{9}$/.test(phone)) {
+    showError("Invalid phone number");
+    return;
+  }
+}
+
+// STEP 4 (Password)
+if (currentStep === 3) {
+  const password = document.getElementById("password").value;
+  const confirm = document.getElementById("confirmPassword").value;
+
+  if (password !== confirm) {
+    showError("password does not match");
+    return;
+  }
+
+  if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
+    showError("Weak password");
+    return;
+  }
+}
+
+// STEP 5 (Age)
+if (currentStep === 4) {
+  const dob = document.getElementById("dob").value;
+
+  const birthDate = new Date(dob);
+  const today = new Date();
+
+  let age = today.getFullYear() - birthDate.getFullYear();
+  const m = today.getMonth() - birthDate.getMonth();
+
+  if (m < 0 || (m === 0 && today.getDate() < birthDate.getDate())) {
+    age--;
+  }
+
+  if (age < 21) {
+    showError("You must be 21+");
+    return;
+  }
+}
 
     // 4️⃣ لو كله تمام نروح للخطوة اللي بعدها
     if (currentStep < steps.length - 1) {
@@ -123,26 +165,31 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   const dob = document.getElementById("dob").value;
 
   /* ===== Validations ===== */
-  if (password !== confirmPassword) {
-    showError("password does not match");
-    // 🔐 Password strength
-if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
-  showError("Password must be at least 8 characters and include uppercase, lowercase, number, and symbol");
+// 1️⃣ تأكيد الباسورد
+if (password !== confirmPassword) {
+  showError("password does not match");
   return;
 }
-    return;
-  }
-// 📧 Email validation
+
+// 2️⃣ الباسورد القوي
+if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
+  showError("Password must be strong (uppercase, lowercase, number, symbol, min 8)");
+  return;
+}
+
+// 3️⃣ الإيميل
 if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
   showError("Invalid email format");
   return;
 }
-// 📱 Phone validation (Egypt)
+
+// 4️⃣ رقم الموبايل
 if (!/^01[0-9]{9}$/.test(phone)) {
-  showError("Invalid Egyptian phone number (must be 11 digits and start with 01)");
+  showError("Invalid Egyptian phone number");
   return;
 }
-// 🎂 Age validation (21+)
+
+// 5️⃣ السن
 const birthDate = new Date(dob);
 const today = new Date();
 
@@ -157,6 +204,7 @@ if (age < 21) {
   showError("You must be at least 21 years old");
   return;
 }
+
 
   const payload = {
     firstName,
@@ -241,6 +289,23 @@ document.getElementById("skipCardBtn").addEventListener("click", () => {
 });
 
 
+function validateCurrentStep() {
+  const btn = steps[currentStep].querySelector(".nextBtn");
+  if (!btn) return;
 
+  let valid = true;
+  const inputs = steps[currentStep].querySelectorAll("input");
+
+  inputs.forEach(input => {
+    if (!input.value.trim()) valid = false;
+  });
+
+  btn.disabled = !valid;
+}
+
+// كل ما المستخدم يكتب
+document.querySelectorAll("input").forEach(input => {
+  input.addEventListener("input", validateCurrentStep);
+});
 
 

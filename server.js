@@ -20,13 +20,18 @@ const limiter = rateLimit({
   message: "Too many requests, please try again later."
 });
     const app = express();
+    app.set('trust proxy', 1);
     app.use(cors());
-  app.use(limiter);
     app.use(express.json());
     app.use(express.static("public"));
     app.use(helmet());
     app.disable("x-powered-by");
-
+app.use((req, res, next) => {
+  if (req.headers["x-forwarded-proto"] !== "https") {
+    return res.redirect("https://" + req.headers.host + req.url);
+  }
+  next();
+});
 
 const mongo = process.env.MONGO_URI || "mongodb://127.0.0.1:27017/onlineBankingDB";
     console.log("MongoDB connecting...");
@@ -590,12 +595,7 @@ if (user.loginAttempts >= 4) {
       res.status(200).send("ok");
     });
 
-app.use((req, res, next) => {
-  if (req.headers["x-forwarded-proto"] !== "https") {
-    return res.redirect("https://" + req.headers.host + req.url);
-  }
-  next();
-}); 
+
 
 mongoose.connect(mongo)
     .then(() => {
