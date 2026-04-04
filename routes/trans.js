@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-
+const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const Otp = require("../models/Otp"); // مهم المسار
 
@@ -11,8 +11,44 @@ router.post("/generate-otp", async (req, res) => {
 
 if (!atmCode || !pin || !amount || !userId) {
       return res.status(400).json({ message: "Missing data" });
+      
     }
+    // 🟢 تحويل amount لرقم
+const amountNumber = Number(amount);
 
+// ❌ حماية
+if (amountNumber <= 0) {
+  return res.status(400).json({ message: "Invalid amount ❌" });
+}
+    // 🟢 نجيب المستخدم
+const user = await User.findById(userId);
+
+if (!user) {
+  return res.status(404).json({ message: "User not found" });
+}
+
+// 🔐 التحقق من الـ PIN
+const isPinCorrect = await bcrypt.compare(pin, user.pin);
+
+if (!isPinCorrect) {
+  return res.status(400).json({ message: "Incorrect PIN ❌" });
+}
+
+// 💰 التحقق من الرصيد
+if (amountNumber > user.balance) {
+  return res.status(400).json({ message: "Insufficient balance 💸" });
+}
+// 🔒 منع OTP مكرر
+const existingOtp = await Otp.findOne({
+  userId,
+    atmCode,
+  used: false,
+  expiresAt: { $gt: new Date() }
+});
+
+if (existingOtp) {
+  return res.status(400).json({ message: "OTP already active ⏳" });
+}
 
     const otp = Math.floor(100000 + Math.random() * 900000);
 
@@ -23,7 +59,7 @@ if (!atmCode || !pin || !amount || !userId) {
     await Otp.create({
       userId,
       otpHash,
-      amount,
+      amount: amountNumber,
       atmCode,
       expiresAt
     });
