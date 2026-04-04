@@ -16,14 +16,16 @@ export default defineConfig({
 
   globalSetup: "./tests/global.setup.mjs",
 
-  webServer: {
-    command: "npm start",
-    url: `${BASE_URL}/health`,
-    timeout: 120_000,
-    reuseExistingServer: !process.env.CI,
-    env: {
-      PORT: String(PORT),
-      MONGO_URI: `mongodb://127.0.0.1:27017/${TEST_DB}`
+webServer: process.env.CI
+  ? undefined
+  : {
+      command: "npm start",
+      url: `${BASE_URL}/health`,
+      timeout: 120_000,
+      reuseExistingServer: true,
+      env: {
+        PORT: String(PORT),
+        MONGO_URI: `mongodb://127.0.0.1:27017/${TEST_DB}`
+      }
     }
-  }
 });
