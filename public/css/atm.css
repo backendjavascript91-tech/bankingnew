@@ -351,3 +351,16 @@ header nav a:hover::after{width:100%}
 .hidden {
   display: none;
 }
+.resend-btn {
+  margin-left: 10px;
+  padding: 6px 12px;
+  border: none;
+  background: transparent;
+  color: #3498db;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.resend-btn:hover {
+  text-decoration: underline;
+}

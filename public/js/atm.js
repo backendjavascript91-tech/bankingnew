@@ -1,30 +1,32 @@
 
   // 🟢 المستخدم الحالي
   const currentUser = JSON.parse(localStorage.getItem("currentUser"));
-let timerInterval;
 document.addEventListener("DOMContentLoaded", () => {
 if (!currentUser) {
   alert("Please login first");
   window.location.href = "login.html";
   return;
 }
-
+let otpActive = false;
+  let timerInterval;
 function startOtpTimer(durationInSeconds) {
   let timeLeft = durationInSeconds;
 
   const timerElement = document.getElementById("otpTimer");
 
   clearInterval(timerInterval);
+  
 
   timerInterval = setInterval(() => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
-
     timerElement.textContent = `Valid for: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
     timeLeft--;
 
     if (timeLeft < 0) {
+      otpActive = false;
+generateBtn.disabled = false;
       clearInterval(timerInterval);
       timerElement.textContent = "OTP expired ❌";
         resendBtn.classList.remove("hidden"); // 👈 هنا
@@ -32,7 +34,7 @@ function startOtpTimer(durationInSeconds) {
 timerElement.style.color = "#e74c3c"; // أحمر
 timerElement.style.background = "rgba(231, 76, 60, 0.1)";
 
-      
+
     }
   }, 1000);
 }
@@ -43,8 +45,9 @@ const resendBtn = document.getElementById("resendOtp");
 
 if (resendBtn) {
   resendBtn.addEventListener("click", async () => {
-
-    resendBtn.classList.add("hidden");
+otpActive = true;
+generateBtn.disabled = true;
+    
 
     try {
       const res = await fetch("/atm/generate-otp", {
@@ -68,7 +71,8 @@ if (resendBtn) {
       }
 
       showATMMessage(`New OTP: ${data.otp}`, "success");
-
+timerElement.style.color = "#2ecc71";
+timerElement.style.background = "rgba(46, 204, 113, 0.1)";
       // 🔁 يبدأ timer من جديد
       startOtpTimer(300);
 
@@ -106,23 +110,26 @@ if (resendBtn) {
   const generateBtn = document.getElementById("generateOtp");
 
   // 🟢 رسائل
-  function showATMMessage(text, type) {
-    const msg = document.getElementById("atmMessage");
-    if (!msg) return;
+function showATMMessage(text, type) {
+  const msg = document.getElementById("atmMessage");
+  if (!msg) return;
 
-    msg.textContent = text;
-    msg.className = "atm-message " + type + " show";
+  msg.textContent = text;
+  msg.className = "atm-message " + type + " show";
+
+  // ❌ لو success (OTP) → يفضل ظاهر
+  if (type === "success") return;
+
+  // ✅ errors بس اللي تختفي
+  setTimeout(() => {
+    msg.classList.remove("show");
+    msg.classList.add("hide");
 
     setTimeout(() => {
-      msg.classList.remove("show");
-      msg.classList.add("hide");
-
-      setTimeout(() => {
-        msg.className = "atm-message";
-      }, 600);
-    }, 6000);
-  }
-
+      msg.className = "atm-message";
+    }, 600);
+  }, 4000);
+}
   // 🟢 إظهار / إخفاء withdrawal
   if (transactionType && withdrawalSection) {
     transactionType.addEventListener("change", () => {
@@ -141,6 +148,8 @@ if (resendBtn) {
       const atmCode = atmCodeInput.value.trim();
       const pin = pinInput.value.trim();
       const amount = amountInput.value.trim();
+        
+    
 
       // 🔴 Validation
       if (!atmCode || !pin || !amount) {
@@ -176,8 +185,14 @@ if (resendBtn) {
 
         // 🟢 عرض OTP
         showATMMessage(`Your OTP: ${data.otp}`, "success");
+
+otpActive = true;              // 👈 مهم
+generateBtn.disabled = true;   // 👈 مهم
+
+
+resendBtn.classList.add("hidden");
           startOtpTimer(300);
-         resendBtn.classList.add("hidden"); // 👈 هنا
+         
       } catch (err) {
         console.error(err);
         showATMMessage("Server error", "error");
