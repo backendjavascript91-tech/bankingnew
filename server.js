@@ -1,7 +1,7 @@
     // server.js
   
     const dotenv = require("dotenv");
-dotenv.config();;
+dotenv.config();
 const helmet = require("helmet");
 const rateLimit = require("express-rate-limit");
 const express = require("express");
@@ -9,32 +9,33 @@ const mongoose = require("mongoose");
 const cors = require("cors");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-
+const atmRoutes = require("./routes/atm");
 const Transaction = require("./models/Transaction");
-    const PORT = process.env.PORT || 3000;
-    const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
-    const JWT_EXPIRES = "6h";
-    const SALT_ROUNDS = 10;
- 
+    const app = express();
 const limiter = rateLimit({
   windowMs: 15 * 60 * 1000,
   max: 100,
   message: "Too many requests, please try again later."
 });
 
+    const PORT = process.env.PORT || 3000;
+    const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
+    const JWT_EXPIRES = "6h";
+    const SALT_ROUNDS = 10;
 
-app.use("/atm", atmRoutes);
 
-const atmRoutes = require("./routes/atm");
 
-    const app = express();
+
+
+    app.use(limiter);
     app.set('trust proxy', 1);
     app.use(cors());
     app.use(express.json());
     app.use(express.static("public"));
     app.use(helmet());
     app.disable("x-powered-by");
-    
+     app.use("/atm", atmRoutes);
+
 mongoose.set("strictQuery", true);
 console.log("ENV TEST:", process.env.MONGO);
 
