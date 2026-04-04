@@ -7,4 +7,4 @@ const userSchema = new mongoose.Schema({
   balance: Number
 });
 
-module.exports = mongoose.model("User", userSchema);
+module.exports = mongoose.models.User || mongoose.model("User", userSchema);
