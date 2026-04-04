@@ -2,14 +2,15 @@
   
     const dotenv = require("dotenv");
 dotenv.config();;
-    import helmet from "helmet";
-    import rateLimit from "express-rate-limit";
-    import express from "express";
-    import mongoose from "mongoose";
-    import cors from "cors";
-    import bcrypt from "bcrypt";
-    import jwt from "jsonwebtoken";
-    import Transaction from "./models/Transaction.js";
+const helmet = require("helmet");
+const rateLimit = require("express-rate-limit");
+const express = require("express");
+const mongoose = require("mongoose");
+const cors = require("cors");
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+
+const Transaction = require("./models/Transaction");
     const PORT = process.env.PORT || 3000;
     const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
     const JWT_EXPIRES = "6h";
@@ -20,9 +21,12 @@ const limiter = rateLimit({
   max: 100,
   message: "Too many requests, please try again later."
 });
-const atmRoutes = require("./routes/atm");
+
 
 app.use("/atm", atmRoutes);
+
+const atmRoutes = require("./routes/atm");
+
     const app = express();
     app.set('trust proxy', 1);
     app.use(cors());
