@@ -16,12 +16,7 @@ const Contact = require("./models/contact");
 const { sendWelcomeEmail } = require("./utils/mailer");
 
 
-try {
-  await sendWelcomeEmail(savedUser.email, savedUser.firstName);
-  console.log("EMAIL SENT ✅");
-} catch (err) {
-  console.log("EMAIL ERROR ❌", err);
-}
+
 const User = require("./models/User");
     const app = express();
 const limiter = rateLimit({
@@ -29,7 +24,9 @@ const limiter = rateLimit({
   max: 100,
   message: "Too many requests, please try again later."
 });
-
+sendWelcomeEmail("bod...@gmail.com", "Test")
+  .then(() => console.log("TEST EMAIL SENT ✅"))
+  .catch(err => console.log("TEST EMAIL ERROR ❌", err));
 
     const PORT = process.env.PORT || 3000;
     const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
@@ -204,7 +201,6 @@ if (user.loginAttempts >= 4) {
   user.lockUntil = Date.now() + 60 * 60 * 1000;
 
   await user.save();
-const { sendWelcomeEmail } = require("../utils/mailer");
 
 await sendWelcomeEmail(user.email, user.firstName);
   return res.status(403).json({
