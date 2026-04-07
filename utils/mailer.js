@@ -1,30 +1,26 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "sandbox.smtp.mailtrap.io",
-  port: 587 ,
+  service: "gmail",
   auth: {
-    user: "336d8adffd64e8",
-    pass: "9587abb583fe7b"
+    user: "backendjavascript91@gmail.com",
+    pass: "shxwhnnrgjfyldft"
   }
 });
 
-// ✅ Welcome Email
 async function sendWelcomeEmail(to, name) {
-  await transporter.sendMail({
-    from: '"Crédit Agricole Bank" <no-reply@bank.com>',
-    to,
-    subject: "Welcome to Our Bank 🎉",
-    html: `
-      <h2>Welcome ${name} 👋</h2>
-      <p>Your account has been created successfully.</p>
-      <p>We are happy to have you with us 💚</p>
-      <hr>
-      <b>Crédit Agricole Bank</b>
-    `
-  });
+  try {
+    const info = await transporter.sendMail({
+      from: `"Bank App" <backendjavascript91@gmail.com>`,
+      to,
+      subject: "Welcome 🎉",
+      html: `<h2>Welcome ${name}</h2>`
+    });
 
-  console.log("📩 Email sent to:", to);
+    console.log("✅ Email sent:", info.response);
+  } catch (err) {
+    console.log("❌ Email error:", err);
+  }
 }
 
 module.exports = { sendWelcomeEmail };

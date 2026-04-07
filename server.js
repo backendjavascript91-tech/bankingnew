@@ -201,7 +201,6 @@ if (user.loginAttempts >= 4) {
 
   await user.save();
 
-await sendWelcomeEmail(user.email, user.firstName);
   return res.status(403).json({
     message: "Account locked due to multiple failed attempts. Try again after 1 hour."
   });
