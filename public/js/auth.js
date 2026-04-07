@@ -308,4 +308,9 @@ document.querySelectorAll("input").forEach(input => {
   input.addEventListener("input", validateCurrentStep);
 });
 
+const submitBtn = document.querySelector('button[type="submit"]');
+submitBtn.disabled = true;
+submitBtn.textContent = "Processing...";
+submitBtn.disabled = false;
+submitBtn.textContent = "Register";
 
