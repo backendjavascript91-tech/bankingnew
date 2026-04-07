@@ -146,12 +146,7 @@ console.log("DB HOST:", mongoose.connection.host);
         });
 
         const savedUser = await newUser.save();
-try {
-  await sendWelcomeEmail(savedUser.email, savedUser.firstName);
-  console.log("EMAIL SENT ✅");
-} catch (err) {
-  console.log("EMAIL ERROR ❌", err.message);
-}       const { password: _p, __v, ...userSafe } = savedUser.toObject();
+
 
         return res.status(201).json({
           message: "login successfully ",
