@@ -16,9 +16,12 @@ const Contact = require("./models/contact");
 const { sendWelcomeEmail } = require("./utils/mailer");
 
 
- sendWelcomeEmail("backendjavascript91@gmail.com", "Test User")
-  .then(() => console.log("EMAIL SENT ✅"))
-  .catch(err => console.log("EMAIL ERROR ❌", err));
+try {
+  await sendWelcomeEmail(savedUser.email, savedUser.firstName);
+  console.log("EMAIL SENT ✅");
+} catch (err) {
+  console.log("EMAIL ERROR ❌", err);
+}
 const User = require("./models/User");
     const app = express();
 const limiter = rateLimit({
@@ -147,11 +150,11 @@ console.log("DB HOST:", mongoose.connection.host);
 
         const savedUser = await newUser.save();
 try {
-  sendWelcomeEmail(savedUser.email, savedUser.firstName)
-  .catch(err => console.log("Email error:", err.message));
+  await sendWelcomeEmail(savedUser.email, savedUser.firstName);
+  console.log("EMAIL SENT ✅");
 } catch (err) {
-  console.log("Email failed:", err.message);
-}        const { password: _p, __v, ...userSafe } = savedUser.toObject();
+  console.log("EMAIL ERROR ❌", err.message);
+}       const { password: _p, __v, ...userSafe } = savedUser.toObject();
 
         return res.status(201).json({
           message: "login successfully ",
