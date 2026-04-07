@@ -24,9 +24,6 @@ const limiter = rateLimit({
   max: 100,
   message: "Too many requests, please try again later."
 });
-sendWelcomeEmail("bod...@gmail.com", "Test")
-  .then(() => console.log("TEST EMAIL SENT ✅"))
-  .catch(err => console.log("TEST EMAIL ERROR ❌", err));
 
     const PORT = process.env.PORT || 3000;
     const JWT_SECRET = process.env.JWT_SECRET || "dev_secret";
@@ -147,6 +144,9 @@ console.log("DB HOST:", mongoose.connection.host);
 
         const savedUser = await newUser.save();
 
+         sendWelcomeEmail(savedUser.email, savedUser.firstName)
+  .then(() => console.log("WELCOME EMAIL SENT ✅"))
+  .catch(err => console.log("EMAIL ERROR ❌", err.message));
 
         return res.status(201).json({
           message: "login successfully ",

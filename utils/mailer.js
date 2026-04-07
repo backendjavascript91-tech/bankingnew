@@ -1,39 +1,30 @@
 const nodemailer = require("nodemailer");
 
 const transporter = nodemailer.createTransport({
-  host: "smtp.gmail.com",
-  port: 587,
-  secure: false,
+  host: "sandbox.smtp.mailtrap.io",
+  port: 2525,
   auth: {
-    user: "backendjavascript91@gmail.com",
-    pass: "vlmzndkaugubgvxc"
+    user: "336d8adffd64e8",
+    pass: "9587abb583fe7b"
   }
 });
 
-// ✅ OTP
-async function sendOtpEmail(to, otp) {
-  await transporter.sendMail({
-    from: `"Crédit Agricole Bank" <backendjavascript91@gmail.com>`,
-    to,
-    subject: "Your OTP Code",
-    text: `Your OTP is: ${otp}`
-  });
-}
-
-// ✅ Welcome
+// ✅ Welcome Email
 async function sendWelcomeEmail(to, name) {
   await transporter.sendMail({
-    from: `"Crédit Agricole Bank" <backendjavascript91@gmail.com>`,
+    from: '"Crédit Agricole Bank" <no-reply@bank.com>',
     to,
     subject: "Welcome to Our Bank 🎉",
     html: `
       <h2>Welcome ${name} 👋</h2>
-      <p>We are happy to have you in our bank.</p>
       <p>Your account has been created successfully.</p>
+      <p>We are happy to have you with us 💚</p>
       <hr>
       <b>Crédit Agricole Bank</b>
     `
   });
+
+  console.log("📩 Email sent to:", to);
 }
 
-module.exports = { sendOtpEmail, sendWelcomeEmail };
+module.exports = { sendWelcomeEmail };
