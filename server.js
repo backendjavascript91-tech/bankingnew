@@ -142,16 +142,24 @@ console.log("DB HOST:", mongoose.connection.host);
           dob: new Date(dob),
         });
 
-        const savedUser = await newUser.save();
+const savedUser = await newUser.save();
+console.log("SENDING EMAIL TO:", savedUser.email);
 
-         sendWelcomeEmail(savedUser.email, savedUser.firstName)
+sendWelcomeEmail(savedUser.email, savedUser.firstName)
+  .then(() => console.log("WELCOME EMAIL SENT ✅"))
+  .catch(err => console.log("EMAIL ERROR ❌", err.message));
+// ✉️ إرسال الإيميل
+sendWelcomeEmail(savedUser.email, savedUser.firstName)
   .then(() => console.log("WELCOME EMAIL SENT ✅"))
   .catch(err => console.log("EMAIL ERROR ❌", err.message));
 
-        return res.status(201).json({
-          message: "login successfully ",
-          user: userSafe,
-        });
+// ✅ عمل userSafe هنا
+const { password: _p, __v, ...userSafe } = savedUser.toObject();
+
+return res.status(201).json({
+  message: "registered successfully",
+  user: userSafe,
+});
       
       }catch (err) {
       console.error("REGISTER ERROR:", err);
