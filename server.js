@@ -145,8 +145,9 @@ console.log("DB HOST:", mongoose.connection.host);
 const savedUser = await newUser.save();
 
 // ✉️ إرسال الإيميل
-await sendWelcomeEmail(savedUser.email, savedUser.firstName);
-console.log("WELCOME EMAIL SENT ✅");
+sendWelcomeEmail(savedUser.email, savedUser.firstName)
+  .then(() => console.log("EMAIL SENT ✅"))
+  .catch(err => console.log("EMAIL ERROR ❌", err));
 
 const { password: _p, __v, ...userSafe } = savedUser.toObject();
 
