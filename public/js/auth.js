@@ -62,26 +62,50 @@ if (currentStep === 2) {
 }
 
 // STEP 4 (Password)
-if (currentStep === 3) {
-  const password = document.getElementById("password").value;
-  const confirm = document.getElementById("confirmPassword").value;
+document.addEventListener("DOMContentLoaded", () => {
 
-  if (!password || !confirm) {
-    showError("Fill password fields");
-    return;
+  // 👇 هنا تحط الكود
+  const passwordInput = document.getElementById("password");
+  const suggestionBox = document.getElementById("passwordSuggestion");
+
+  function generateStrongPassword() {
+    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$!%*?&";
+    let pass = "";
+
+    for (let i = 0; i < 12; i++) {
+      pass += chars.charAt(Math.floor(Math.random() * chars.length));
+    }
+
+    return pass;
   }
 
-  if (password !== confirm) {
-    showError("password does not match");
-    return;
+  function isWeakPassword(pass) {
+    return pass.length < 8 || !/[A-Z]/.test(pass) || !/[0-9]/.test(pass);
   }
 
-  // ✅ هنا بقى الباسورد القوي
-  if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
-    showError("Weak password  (Use uppercase, lowercase, number & symbol)");
-    return;
+  passwordInput.addEventListener("input", () => {
+    if (isWeakPassword(passwordInput.value)) {
+      const strongPass = generateStrongPassword();
+
+suggestionBox.innerHTML = `
+  ⚠️ Weak password <br>
+  💡 Suggested: <b id="suggestedPass" style="cursor:pointer;">${strongPass}</b>
+`;
+
+setTimeout(() => {
+  const suggested = document.getElementById("suggestedPass");
+  if (suggested) {
+    suggested.onclick = () => {
+      passwordInput.value = strongPass;
+    };
   }
-}
+}, 0);
+    } else {
+      suggestionBox.innerHTML = "✅ Strong password";
+    }
+  });
+
+});
 
 // STEP 5 (Age)
 if (currentStep === 4) {
