@@ -62,50 +62,26 @@ if (currentStep === 2) {
 }
 
 // STEP 4 (Password)
-document.addEventListener("DOMContentLoaded", () => {
+if (currentStep === 3) {
+  const password = document.getElementById("password").value;
+  const confirm = document.getElementById("confirmPassword").value;
 
-  // 👇 هنا تحط الكود
-  const passwordInput = document.getElementById("password");
-  const suggestionBox = document.getElementById("passwordSuggestion");
-
-  function generateStrongPassword() {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$!%*?&";
-    let pass = "";
-
-    for (let i = 0; i < 12; i++) {
-      pass += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-
-    return pass;
+  if (!password || !confirm) {
+    showError("Fill password fields");
+    return;
   }
 
-  function isWeakPassword(pass) {
-    return pass.length < 8 || !/[A-Z]/.test(pass) || !/[0-9]/.test(pass);
+  if (password !== confirm) {
+    showError("Password does not match");
+    return;
   }
 
-  passwordInput.addEventListener("input", () => {
-    if (isWeakPassword(passwordInput.value)) {
-      const strongPass = generateStrongPassword();
-
-suggestionBox.innerHTML = `
-  ⚠️ Weak password <br>
-  💡 Suggested: <b id="suggestedPass" style="cursor:pointer;">${strongPass}</b>
-`;
-
-setTimeout(() => {
-  const suggested = document.getElementById("suggestedPass");
-  if (suggested) {
-    suggested.onclick = () => {
-      passwordInput.value = strongPass;
-    };
+  // 🔥 ده أهم سطر
+  if (password.length < 8 || !/[A-Z]/.test(password) || !/[0-9]/.test(password)) {
+    showError("Weak password (use uppercase + number + 8 chars)");
+    return;
   }
-}, 0);
-    } else {
-      suggestionBox.innerHTML = "✅ Strong password";
-    }
-  });
-
-});
+}
 
 // STEP 5 (Age)
 if (currentStep === 4) {
@@ -342,15 +318,15 @@ const submitBtn = document.querySelector('button[type="submit"]');
 submitBtn.disabled = true;
 submitBtn.textContent = "Processing...";
 submitBtn.disabled = false;
-document.addEventListener("input", (e) => {
-  if (e.target.id === "password") {
+const passwordInput = document.getElementById("password");
+const suggestionBox = document.getElementById("passwordSuggestion");
 
-    const value = e.target.value.trim();
-    const suggestionBox = document.getElementById("passwordSuggestion");
+if (passwordInput) {
+  passwordInput.addEventListener("input", () => {
 
-    if (!suggestionBox) return;
+    const value = passwordInput.value.trim();
 
-    // ❌ لو فاضي → مفيش حاجة
+    // لو فاضي → امسح
     if (value === "") {
       suggestionBox.innerHTML = "";
       return;
@@ -379,5 +355,5 @@ document.addEventListener("input", (e) => {
     } else {
       suggestionBox.innerHTML = "✅ Strong password";
     }
-  }
-});
+  });
+}
