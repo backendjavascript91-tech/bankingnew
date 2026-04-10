@@ -75,97 +75,98 @@ console.log("DB HOST:", mongoose.connection.host);
       return re.test(mobile);
     }
 
-    // Register endpoint
-    app.post("/register", async (req, res) => {
-      console.log("recved data", req.body);
+app.post("/register", async (req, res) => {
+  try {
+    const {
+      firstName,
+      lastName,
+      nationalId,
+      username,
+      email,
+      phone,
+      password,
+      dob,
+    } = req.body;
 
-      try {
-        const {
-          firstName,
-          lastName,
-          nationalId,
-          username,
-          email,
-          phone,
-          password,
-          dob,
-        } = req.body;
-
-        // National ID must be exactly 14 digits
-        if (!/^\d{14}$/.test(nationalId)) {
-          return res.status(400).json({
-            message: "National ID must be exactly 14 digits",
-          });
-        }
-
-        if (
-          !firstName ||
-          !lastName ||
-          !nationalId ||
-          !username ||
-          !email ||
-          !phone ||
-          !password ||
-          !dob
+    // ✅ 1. Required fields
+    if (
+      !firstName ||
+      !lastName ||
+      !nationalId ||
+      !username ||
+      !email ||
+      !phone ||
+      !password ||
+      !dob
     ) {
-      return res.status(400).json({ message: "All fields are required" });
+      return res.status(400).json({
+        message: "All fields are required",
+      });
     }
 
+    // ✅ 2. National ID
+    if (!/^\d{14}$/.test(nationalId)) {
+      return res.status(400).json({
+        message: "National ID must be exactly 14 digits",
+      });
+    }
+
+    // ✅ 3. Email
     if (!validateEmail(email)) {
-      return res.status(400).json({ message: "Invalid email format" });
+      return res.status(400).json({
+        message: "Invalid email format",
+      });
     }
 
+    // ✅ 4. Phone
     if (!validateMobile(phone)) {
-      return res.status(400).json({ message: "Invalid mobile number" });
+      return res.status(400).json({
+        message: "Invalid mobile number",
+      });
     }
 
+    // ✅ 5. Check if user exists 🔥
     const existUser = await User.findOne({
-      $or: [{ username }, { email }],
+     $or: [{ username: username }, { email: email }]
     });
 
     if (existUser) {
-      return res
-        .status(409)
-        .json({ message: "Username or email already exists" });
-    }
-
-        const hashedPassword = await bcrypt.hash(password, SALT_ROUNDS);
-
-        const newUser = new User({
-          firstName,
-          lastName,
-          nationalId,
-          username,
-          email,
-          phone,
-          password: hashedPassword,
-          dob: new Date(dob),
-        });
-
-const savedUser = await newUser.save();
-
-// ✉️ إرسال الإيميل
-sendWelcomeEmail(savedUser.email, savedUser.firstName)
-  .then(() => console.log("EMAIL SENT ✅"))
-  .catch(err => console.log("EMAIL ERROR ❌", err));
-
-const { password: _p, __v, ...userSafe } = savedUser.toObject();
-
-return res.status(201).json({
-  message: "registered successfully",
-  user: userSafe,
-});
-
-      
-      }catch (err) {
-      console.error("REGISTER ERROR:", err);
-      res.status(500).json({
-        message: "server error",
-        error: err.message
-      
+      return res.status(409).json({
+        message: "Username or email already exists",
       });
     }
-    });   
+
+    // ✅ 6. Hash password
+    const hashedPassword = await bcrypt.hash(password, 10);
+
+    // ✅ 7. Create user
+    const newUser = new User({
+      firstName,
+      lastName,
+      nationalId,
+      username,
+      email,
+      phone,
+      password: hashedPassword,
+      dob,
+    });
+
+    // ✅ 8. Save
+    await newUser.save();
+
+    // ✅ 9. Send email
+    await sendWelcomeEmail(email, username);
+
+    // ✅ 10. Response
+    res.json({ message: "User registered successfully" });
+
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+    
+     
     // -------- Login --------
     app.post("/login", async (req, res) => {
       try {
