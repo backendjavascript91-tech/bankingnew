@@ -166,6 +166,29 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   const nationalId = document.getElementById("nationalId").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phonenumber").value.trim();
+  const form = document.getElementById("registerForm");
+
+form.addEventListener("submit", (e) => {
+
+  const password = document.getElementById("password").value;
+  const confirmPassword = document.getElementById("confirmPassword").value;
+
+  // 1️⃣ تأكيد الباسورد
+  if (password !== confirmPassword) {
+    e.preventDefault();
+    showError("password does not match");
+    return;
+  }
+
+  // 2️⃣ القوة
+   if (!/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&]).{8,}$/.test(password)) {
+    e.preventDefault();
+    showError("Password must be strong");
+    return;
+  }
+
+});
+
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
   const dob = document.getElementById("dob").value;
@@ -327,11 +350,10 @@ if (passwordInput) {
     const value = passwordInput.value.trim();
 
     // لو فاضي → امسح
-    if (value === "") {
-      suggestionBox.innerHTML = "";
-      return;
-    }
-
+if (value === "") {
+  suggestionBox.style.display = "none";
+  return;
+}
     function generateStrongPassword() {
       const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789@$!%*?&";
       let pass = "";
@@ -347,13 +369,14 @@ if (passwordInput) {
 
     if (isWeakPassword(value)) {
       const strongPass = generateStrongPassword();
-
-      suggestionBox.innerHTML = `
-        ⚠️ Weak password <br>
-        💡 Suggested: <b>${strongPass}</b>
-      `;
+      suggestionBox.style.display = "block";
+       suggestionBox.innerHTML = `
+  ⚠️ Weak password <br>
+  💡 Suggested: <b>${strongPass}</b>
+`      ;
     } else {
-      suggestionBox.innerHTML = "✅ Strong password";
+      suggestionBox.style.display = "block";
+suggestionBox.innerHTML = "✅ Strong password";
     }
   });
 }
