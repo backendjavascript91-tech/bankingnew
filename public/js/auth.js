@@ -170,7 +170,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
 
 
 
-});
+
 
   const password = document.getElementById("password").value;
   const confirmPassword = document.getElementById("confirmPassword").value;
