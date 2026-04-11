@@ -70,7 +70,7 @@ generateBtn.disabled = true;
         return;
       }
 
-      showATMMessage("New OTP sent to your email 📧", "success");
+     showMessage("Your OTP is: " + data.otp);
 timerElement.style.color = "#2ecc71";
 timerElement.style.background = "rgba(46, 204, 113, 0.1)";
       // 🔁 يبدأ timer من جديد

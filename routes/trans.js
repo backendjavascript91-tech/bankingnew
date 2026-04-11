@@ -72,8 +72,10 @@ router.post("/generate-otp", async (req, res) => {
     // ❗ دلوقتي مش بنبعت ايميل OTP عشان متكسرش الدنيا
     // await sendOtpEmail(user.email, otp);
 
-    res.json({ message: "OTP created successfully ✅" });
-
+res.json({
+  message: "OTP created successfully ✅",
+  otp // 👈 ده المهم
+});
   } catch (err) {
     console.error(err);
     res.status(500).json({ message: "Server error ❌" });
