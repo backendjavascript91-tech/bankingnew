@@ -1,13 +1,6 @@
 const withdrawBtn = document.getElementById("withdrawBtn");
 const messageBox = document.getElementById("atmMessage");
-if (!pin || !otpInput || !amountInput) {
-  showMessage("All fields are required ❌", "error");
-  return;
-}
-if (!user) {
-  showMessage("Please login again ❌", "error");
-  return;
-}
+
 const session = JSON.parse(localStorage.getItem("atmSession"));
 
 if (session) {
@@ -29,6 +22,14 @@ withdrawBtn.onclick = async () => {
 
   const user = JSON.parse(localStorage.getItem("currentUser"));
 
+  if (!pin || !otpInput || !amountInput) {
+  showMessage("All fields are required ❌", "error");
+  return;
+}
+if (!user) {
+  showMessage("Please login again ❌", "error");
+  return;
+}
   // ❌ مفيش session
   if (!session) {
     showMessage("No active session ❌", "error");
@@ -95,4 +96,7 @@ withdrawBtn.onclick = async () => {
     console.error(err);
     showMessage("Server error ❌", "error");
   }
+};
+document.getElementById("backBtn").onclick = () => {
+  window.location.href = "atm.html";
 };
