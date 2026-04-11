@@ -123,10 +123,13 @@ app.post("/register", async (req, res) => {
       });
     }
 
-  const existUser = await User.findOne({
+const cleanEmail = email.trim().toLowerCase();
+const cleanUsername = username.trim();
+
+const existUser = await User.findOne({
   $or: [
-    { username: username.trim() },
-    { email: email.trim().toLowerCase() }
+    { username: cleanUsername },
+    { email: cleanEmail }
   ]
 });
 
