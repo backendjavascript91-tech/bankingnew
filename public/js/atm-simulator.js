@@ -1,102 +1,109 @@
-const withdrawBtn = document.getElementById("withdrawBtn");
-const messageBox = document.getElementById("atmMessage");
+document.addEventListener("DOMContentLoaded", () => {
 
-const session = JSON.parse(localStorage.getItem("atmSession"));
+  const withdrawBtn = document.getElementById("withdrawBtn");
+  const messageBox = document.getElementById("atmMessage");
+  const backBtn = document.getElementById("backBtn");
 
-if (session) {
-  document.getElementById("amount").value = session.amount;
+  const session = JSON.parse(localStorage.getItem("atmSession"));
 
-  document.getElementById("maxAmount").textContent =
-    "Max allowed: " + session.amount + " EGP";
-}
-function showMessage(text, type) {
-  messageBox.textContent = text;
-  messageBox.className = "atm-message show " + type;
-}
-
-withdrawBtn.onclick = async () => {
-
-  const pin = document.getElementById("pin").value.trim();
-  const otpInput = document.getElementById("otp").value.trim();
-  const amountInput = Number(document.getElementById("amount").value);
-
-  const user = JSON.parse(localStorage.getItem("currentUser"));
-
-  if (!pin || !otpInput || !amountInput) {
-  showMessage("All fields are required ❌", "error");
-  return;
-}
-if (!user) {
-  showMessage("Please login again ❌", "error");
-  return;
-}
-  // ❌ مفيش session
-  if (!session) {
-    showMessage("No active session ❌", "error");
-    return;
+  if (session) {
+    document.getElementById("amount").value = session.amount;
   }
 
-  // ⏳ تحقق من الوقت (5 دقايق)
-  const now = Date.now();
-  const diff = now - session.createdAt;
-
-  if (diff > 5 * 60 * 1000) {
-    showMessage("OTP expired ⏳", "error");
-    localStorage.removeItem("atmSession");
-    return;
+  function showMessage(text, type) {
+    messageBox.textContent = text;
+    messageBox.className = "atm-message show " + type;
   }
 
-  // ❌ المبلغ أكبر
-  if (amountInput > session.amount) {
-    showMessage("Amount exceeds allowed limit 💸", "error");
-    return;
-  }
+  withdrawBtn.onclick = async () => {
 
-  try {
-     withdrawBtn.disabled = true; // 👈 هنا
+    const pin = document.getElementById("pin").value.trim();
+    const otpInput = document.getElementById("otp").value.trim();
+    const amountInput = Number(document.getElementById("amount").value);
 
-    showMessage("Processing...", "success");
+    const user = JSON.parse(localStorage.getItem("currentUser"));
 
-    // 🔥 نكلم السيرفر
-    const res = await fetch("/atm/withdraw", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
-      body: JSON.stringify({
-        userId: user._id,
-        otp: otpInput,
-        atmCode: session.atmCode,
-        pin,
-        amount: amountInput
-      })
-    });
-
-    const data = await res.json();
-     withdrawBtn.disabled = false; 
-    if (!res.ok) {
-      showMessage(data.message || "Error ❌", "error");
+    if (!pin || !otpInput || !amountInput) {
+      showMessage("All fields are required ❌", "error");
       return;
     }
 
-    // ✅ نجاح
-    showMessage("Take your cash 💵", "success");
+    if (!user) {
+      showMessage("Please login again ❌", "error");
+      return;
+    }
 
-    // 🧹 امسح session
-    localStorage.removeItem("atmSession");
+    if (!session) {
+      showMessage("No active session ❌", "error");
+      return;
+    }
 
-    // 🔄 ممكن تحدث الرصيد
-    localStorage.setItem("currentUser", JSON.stringify({
-      ...user,
-      balance: data.newBalance
-    }));
+    const now = Date.now();
+    const diff = now - session.createdAt;
 
-  } catch (err) {
-      withdrawBtn.disabled = false; 
-    console.error(err);
-    showMessage("Server error ❌", "error");
-  }
-};
-document.getElementById("backBtn").onclick = () => {
-  window.location.href = "atm.html";
-};
+    if (diff > 5 * 60 * 1000) {
+      showMessage("OTP expired ⏳", "error");
+      localStorage.removeItem("atmSession");
+      return;
+    }
+
+    if (amountInput > session.amount) {
+      showMessage("Amount exceeds allowed limit 💸", "error");
+      return;
+    }
+
+    try {
+      withdrawBtn.disabled = true;
+
+      showMessage("Processing...", "success");
+
+      const res = await fetch("/atm/withdraw", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({
+          userId: user._id,
+          otp: otpInput,
+          atmCode: session.atmCode,
+          pin,
+          amount: amountInput
+        })
+      });
+
+      const data = await res.json();
+
+      withdrawBtn.disabled = false;
+
+      if (!res.ok) {
+        showMessage(data.message || "Error ❌", "error");
+        return;
+      }
+
+      // ✅ نجاح
+      showMessage("Withdrawal successful 💸", "success");
+
+      localStorage.removeItem("atmSession");
+
+      localStorage.setItem("currentUser", JSON.stringify({
+        ...user,
+        balance: data.newBalance
+      }));
+
+      // 🔥 الجديد (مهم)
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 1500);
+
+    } catch (err) {
+      withdrawBtn.disabled = false;
+      console.error(err);
+      showMessage("Server error ❌", "error");
+    }
+  };
+
+  backBtn.onclick = () => {
+    window.location.href = "atm.html";
+  };
+
+});
