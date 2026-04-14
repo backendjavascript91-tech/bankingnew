@@ -157,20 +157,23 @@ console.log("existUser:", existUser); // 👈 حطه هنا
     });
 
     // ✅ 8. Save
-// Save
+    await newUser.save();
 await newUser.save();
 
-// 🔥 ابعت الإيميل هنا
-await sendWelcomeEmail(newUser.email, newUser.firstName);
-
-// Response
 res.json({
   message: "User registered successfully",
   user: newUser
 });
 
 // بعد الرد
-
+sendWelcomeEmail(email, username);
+    // ✅ 9. Send email
+       sendWelcomeEmail(email, username);
+    // ✅ 10. Response
+    res.json({
+  message: "User registered successfully",
+  user: newUser
+});
 
   } catch (err) {
     console.log(err);
