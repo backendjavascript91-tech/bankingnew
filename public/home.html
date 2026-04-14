@@ -13,8 +13,9 @@
   font-family:"Poppins",sans-serif;
 }
 
+/* BACKGROUND */
 body{
-  background:#f5f5f5;
+  background: linear-gradient(135deg, #e6f0ec, #f8f9f9);
 }
 
 /* NAVBAR */
@@ -52,7 +53,7 @@ body{
   border-radius:8px;
 }
 
-/* MAIN LAYOUT */
+/* MAIN */
 .home{
   display:flex;
   width:90%;
@@ -61,23 +62,32 @@ body{
   height:80vh;
 }
 
-/* LEFT (Hero) */
+/* HERO */
 .hero{
   flex:1;
   background:url("image/banki-online-4.jpg") no-repeat center/cover;
   border-radius:20px;
   position:relative;
   color:white;
+  overflow:hidden;
+}
+
+.hero::after{
+  content:"";
+  position:absolute;
+  inset:0;
+  background:linear-gradient(to top, rgba(0,0,0,0.6), transparent);
 }
 
 .hero-content{
   position:absolute;
   bottom:40px;
   left:40px;
+  z-index:2;
 }
 
 .hero h1{
-  font-size:35px;
+  font-size:38px;
   margin-bottom:10px;
 }
 
@@ -95,18 +105,20 @@ body{
   cursor:pointer;
 }
 
-/* RIGHT (Services) */
+/* SERVICES */
 .services{
   flex:1;
-  background:white;
-  border-radius:20px;
+  background:rgba(255,255,255,0.6);
+  backdrop-filter:blur(10px);
+  border-radius:25px;
   padding:30px;
-  box-shadow:0 5px 15px rgba(0,0,0,0.1);
+  box-shadow:0 10px 25px rgba(0,0,0,0.1);
 }
 
 .services h2{
-  margin-bottom:20px;
+  margin-bottom:25px;
   color:#083c24;
+  font-size:26px;
 }
 
 .cards{
@@ -116,17 +128,33 @@ body{
 }
 
 .card{
-  background:#f5f5f5;
+  background:rgba(255,255,255,0.7);
   padding:25px;
-  border-radius:12px;
-  cursor:pointer;
+  border-radius:15px;
   transition:0.3s;
+  cursor:pointer;
+  box-shadow:0 5px 10px rgba(0,0,0,0.05);
+}
+
+.card .icon{
+  font-size:30px;
+  margin-bottom:10px;
+}
+
+.card h3{
+  margin-bottom:8px;
+}
+
+.card p{
+  font-size:14px;
+  color:#555;
 }
 
 .card:hover{
   background:#2f8a64;
   color:white;
-  transform:translateY(-5px);
+  transform:translateY(-7px);
+  box-shadow:0 15px 25px rgba(0,0,0,0.2);
 }
 
 /* MOBILE */
@@ -149,17 +177,17 @@ body{
 
   <ul>
     <li><a href="home.html">Home</a></li>
-    <li><a href="about.html">About</a></li>
-    <li><a href="contact.html">Contact</a></li>
-    <li><a href="login.html">Login</a></li>
-    <li><a href="register.html" class="signup">Sign Up</a></li>
+    <li><a href="#">About</a></li>
+    <li><a href="#">Contact</a></li>
+    <li><a href="#">Login</a></li>
+    <li><a href="#" class="signup">Sign Up</a></li>
   </ul>
 </div>
 
-<!-- HOME -->
+<!-- MAIN -->
 <div class="home">
 
-  <!-- LEFT -->
+  <!-- HERO -->
   <div class="hero">
     <div class="hero-content">
       <h1>Enjoy new services now</h1>
@@ -168,28 +196,32 @@ body{
     </div>
   </div>
 
-  <!-- RIGHT -->
+  <!-- SERVICES -->
   <div class="services">
     <h2>Check your products</h2>
 
     <div class="cards">
 
       <div class="card">
+        <div class="icon">💳</div>
         <h3>Accounts</h3>
         <p>View your account</p>
       </div>
 
       <div class="card">
+        <div class="icon">📈</div>
         <h3>Save & Invest</h3>
         <p>Grow your money</p>
       </div>
 
       <div class="card">
+        <div class="icon">💰</div>
         <h3>Finance</h3>
         <p>Get a loan</p>
       </div>
 
       <div class="card">
+        <div class="icon">🚗</div>
         <h3>Buy a Car</h3>
         <p>Car services</p>
       </div>
