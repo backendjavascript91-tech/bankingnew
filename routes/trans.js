@@ -151,7 +151,7 @@ router.post("/withdraw", async (req, res) => {
     await Transaction.create({
       userId,
       amount: amountNumber,
-      type: "withdraw",
+      type: "withdrawal",
       source: "ATM",
       direction: "out",
       createdAt: new Date()
