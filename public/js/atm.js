@@ -16,29 +16,7 @@ function startOtpTimer(durationInSeconds) {
 
   clearInterval(timerInterval);
   
-const session = JSON.parse(localStorage.getItem("atmSession"));
 
-if (session) {
-  document.getElementById("amount").value = session.amount;
-
-  const now = Date.now();
-  const diff = now - session.createdAt;
-
-  const remainingTime = 300 - Math.floor(diff / 1000);
-
-  if (remainingTime > 0) {
-    console.log("Returning with existing OTP");
-
-    otpActive = true;
-    generateBtn.disabled = true;
-
-    showATMMessage("Your OTP is: " + session.otp, "success");
-
-    startOtpTimer(remainingTime); // 👈 بدل 300
-  } else {
-    localStorage.removeItem("atmSession");
-  }
-}
   timerInterval = setInterval(() => {
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;
@@ -130,7 +108,29 @@ timerElement.style.background = "rgba(46, 204, 113, 0.1)";
 
 
   const generateBtn = document.getElementById("generateOtp");
+    const session = JSON.parse(localStorage.getItem("atmSession"));
 
+if (session) {
+  document.getElementById("amount").value = session.amount;
+
+  const now = Date.now();
+  const diff = now - session.createdAt;
+
+  const remainingTime = 300 - Math.floor(diff / 1000);
+
+  if (remainingTime > 0) {
+    console.log("Returning with existing OTP");
+
+    otpActive = true;
+    generateBtn.disabled = true;
+
+    showATMMessage("Your OTP is: " + session.otp, "success");
+
+    startOtpTimer(remainingTime); // 👈 بدل 300
+  } else {
+    localStorage.removeItem("atmSession");
+  }
+}
   // 🟢 رسائل
 function showATMMessage(text, type) {
   const msg = document.getElementById("atmMessage");
