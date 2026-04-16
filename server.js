@@ -13,7 +13,7 @@ const atmRoutes = require("./routes/trans");
 const Transaction = require("./models/Transaction");
 const Card = require("./models/card");
 const Contact = require("./models/contact");
-const { sendWelcomeEmail } = require("./utils/mailer");
+const { sendWelcomeEmail } = require("./utils/email");
 
 
 
