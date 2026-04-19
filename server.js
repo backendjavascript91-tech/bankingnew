@@ -160,10 +160,8 @@ console.log("existUser:", existUser); // 👈 حطه هنا
 // Save
 await newUser.save();
 
-// إرسال الإيميل
 await sendWelcomeEmail(newUser.email, newUser.firstName);
 
-// الرد
 res.status(201).json({
   message: "User registered successfully",
   user: newUser
