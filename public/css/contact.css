@@ -12,15 +12,14 @@ body {
 
 /* ===== Card ===== */
 .card {
-  width: 900px;
-  max-width: 100%;
-  background: rgba(255,255,255,0.25);
-  backdrop-filter: blur(20px);
-  border-radius: 15px;
-  border: 1px solid rgba(255,255,255,0.3);
-  box-shadow: 0 8px 25px rgba(0,0,0,0.15);
-  overflow: hidden;
-  animation: fadeIn 1s ease;
+  width: 100%;
+  max-width: 1200px;
+  margin: auto;
+
+  background: transparent;   /* 👈 شيل الخلفية */
+  backdrop-filter: none;     /* 👈 شيل البلور */
+  border: none;              /* 👈 شيل البوردر */
+  box-shadow: none;          /* 👈 شيل الشادو */
 }
 
 @keyframes fadeIn {
@@ -30,12 +29,23 @@ body {
 
 /* ===== Header ===== */
 .header {
+  position: fixed;
+  top: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  width: 90%;
+  z-index: 1000;
+
+  background: rgba(255,255,255,0.35);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: rgba(234,248,240,0.6);
-  padding: 16px 22px;
-  animation: slideDown .8s ease;
+
+  padding: 10px 40px;
 }
 
 @keyframes slideDown {
@@ -49,12 +59,21 @@ body {
 }
 .header img:hover { transform: scale(1.1); }
 
+.nav {
+  display: flex;
+  gap: 50px;
+}
+
 .nav a {
   text-decoration: none;
   color: #064a31;
   font-weight: 600;
-  margin-left: 18px;
   position: relative;
+
+  padding: 6px 12px;
+  border-radius: 10px;
+
+  transition: all 0.3s ease;
 }
 
 .nav a::after {
@@ -125,7 +144,7 @@ body {
   border-radius: 15px;
   padding: 30px;
   border: 1px solid #cfe7d6;
-  max-width: 600px;
+  max-width: 1000px;
 }
 
 .contact-box h2 {
@@ -148,16 +167,31 @@ label {
 
 input, textarea {
   width: 100%;
-  padding: 10px;
-  border-radius: 8px;
-  border: 1.8px solid #b8dbcb;
+  padding: 14px;
+  border-radius: 10px;
+
+  background: rgba(255, 255, 255, 0.15); /* 👈 شفافية */
+  border: 1px solid rgba(255,255,255,0.3);
+
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+
   font-size: 15px;
+ color: #083c24; /* 👈 أوضح وأشيك */
+font-weight: 500;
+
+  transition: all 0.3s ease;
 }
 
 input:focus, textarea:focus {
   outline: none;
-  border-color: #0b6b4a;
-  box-shadow: 0 0 6px rgba(11,107,74,0.3);
+
+  border: 1px solid #0b5134;
+  box-shadow: 0 0 12px rgba(11, 81, 52, 0.3);
+
+  background: rgba(255, 255, 255, 0.25);
+
+  transform: translateY(-4px); /* 👈 تطلع لفوق */
 }
 
 textarea {
@@ -171,7 +205,7 @@ button {
   background: #0b6b4a;
   color: #fff;
   border: none;
-  border-radius: 8px;
+border-radius: 50px;
   cursor: pointer;
   font-weight: 700;
   align-self: center;
@@ -203,4 +237,48 @@ button:hover {
     border-right:none;
     border-bottom:2px solid rgba(213,233,219,0.7);
   }
+}
+@media(max-width:720px){
+
+  .contact-box {
+    max-width: 95%;
+    padding: 20px;
+  }
+
+}
+@media(max-width:720px){
+
+  .header {
+    flex-direction: column;
+    gap: 10px;
+    text-align: center;
+  }
+
+  .nav a {
+    margin-left: 10px;
+    font-size: 14px;
+  }
+
+}
+@media(max-width:720px){
+
+  .main {
+    padding: 15px;
+  }
+
+}
+@media(max-width:720px){
+
+  button {
+    width: 100%;
+  }
+
+}
+.contact-box {
+  background: rgba(255,255,255,0.2);
+  backdrop-filter: blur(15px);
+}
+.nav a:hover {
+  background-color: #0b5134;
+  color: white;
 }
