@@ -325,12 +325,15 @@ button:hover {
     max-width: 95%;
     padding: 25px;
     border-radius: 15px;
+
+    margin-top: 120px; /* 👈 ده المهم */
   }
+}
 
   h2 {
     font-size: 22px;
   }
-}
+
 .step input {
   transition: all 0.3s ease;
 }
