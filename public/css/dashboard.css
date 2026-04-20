@@ -217,18 +217,16 @@
     }
 
     /* underline hover effect (زي المصدر) */
-    .navbar .links a{
-      text-decoration: none;
-      color:#064a31;
-      font-weight:600;
-      font-size:16px;
-      margin-left:18px;
-      padding: 0;
-      border-radius: 0;
-      background: transparent;
-      position: relative;
-      transition: .3s;
-    }
+.navbar .links a {
+  text-decoration: none;
+  color: #064a31;
+  font-weight: bold;
+  font-size: 18px;
+  padding: 10px 18px;
+  border-radius: 10px;
+
+  transition: all 0.3s ease;
+}
 
     .navbar .links a:hover{
       background: transparent;
@@ -455,4 +453,12 @@ transition:.3s;
 background:#09553b;
 transform:translateY(-2px);
 box-shadow:0 4px 10px rgba(0,0,0,.2);
+}
+.navbar .links a:hover {
+  background: rgba(11, 107, 74, 0.15);
+  backdrop-filter: blur(8px);
+
+  transform: translateY(-3px);
+
+  box-shadow: 0 4px 12px rgba(0,0,0,0.2);
 }
