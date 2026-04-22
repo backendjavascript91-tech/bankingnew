@@ -195,12 +195,13 @@ overlay.classList.add("active");
         alert("error loading");
       }
     });
-    document.getElementById("logoutBtn").addEventListener("click", function(e) {
-  e.preventDefault(); // يمنع اللينك الطبيعي
-  localStorage.removeItem("currentUser"); // يمسح بيانات المستخدم
-  window.location.href = "login.html"; // يروح لصفحة اللوجن
+document.addEventListener("DOMContentLoaded", function () {
+  document.getElementById("logoutBtn").addEventListener("click", function(e) {
+    e.preventDefault();
+    localStorage.removeItem("isLoggedIn");
+    window.location.href = "login.html";
+  });
 });
-
 document.getElementById("closeModal").onclick = () => {
 document.getElementById("transactionOverlay").classList.remove("active");
 };
@@ -270,3 +271,7 @@ alert("Receipt copied to clipboard");
 
 });
   
+document.getElementById("logoutBtn").addEventListener("click", function() {
+  localStorage.removeItem("isLoggedIn");
+  window.location.href = "login.html";
+});

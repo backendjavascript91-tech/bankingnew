@@ -3,7 +3,11 @@
 <head>
   <meta charset="UTF-8">
   <title>ATM Simulator</title>
-
+<script>
+  if (localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "login.html";
+  }
+</script>
   <!-- 👇 نفس CSS بتاعك -->
   <link rel="stylesheet" href="css/atm-simulator.css">
 </head>
