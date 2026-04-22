@@ -550,15 +550,18 @@ if (user.loginAttempts >= 4) {
     });
 
 
-    app.get("/", (req, res) => {
-      res.redirect("/home.html");
-    });
+ 
 
     // ✅ مهم لـ Playwright
     app.get("/health", (req, res) => {
       res.status(200).send("ok");
     });
 
+const path = require("path");
+
+app.get("/", (req, res) => {
+  res.sendFile(path.join(__dirname, "public", "home.html"));
+});
 
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
