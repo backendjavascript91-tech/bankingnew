@@ -73,7 +73,7 @@ body {
   font-size: 17px;
   letter-spacing: 1px;
 
-  white-space: nowrap; /* 👈 أضف السطر ده */
+  white-space: nowrap;
 }
 
     .top-nav ul li:hover {
@@ -103,8 +103,8 @@ body {
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
   text-align: center;
   color: #083c24;
-  max-width: 900px; /* ✅ علشان ما يتمدش بعرض الشاشة */
-  margin: 60px auto; /* ✅ دا اللي بيخليه في النص */
+  max-width: 900px;
+  margin: 60px auto; 
 }
 
     
@@ -228,10 +228,10 @@ body {
   transform: rotate(10deg) scale(1.1);
   filter: brightness(1.2);
 }
-    /* ======== 🔚 Navbar Links Fix (keep black color) ======== */
+
 
 .top-nav ul li a {
-  color: black !important; /* يخلي اللون أسود دايمًا */
+  color: black !important; 
   text-decoration: none;
   font-weight: bold;
   transition: transform 0.3s ease;
@@ -239,7 +239,7 @@ body {
 
 .top-nav ul li a:hover {
   transform: scale(1.1);
-  color: #2f8a64 !important; /* حتى في hover يفضل أسود */
+  color: #2f8a64 !important; 
 }
 
 /* زر sign up */
@@ -269,8 +269,8 @@ flex-direction:row;
 
 .top-nav ul{
   gap:10px;
-  flex-wrap:nowrap;   /* مهم */
-  overflow-x:auto;    /* مهم */
+  flex-wrap:nowrap;   
+  overflow-x:auto;   
 }
 
 /* logo smaller */
@@ -319,9 +319,8 @@ height:180px;
 body {
   overflow-x: hidden;
 }
-/* آخر حاجة في الملف */
+
 * {
-  outline: 1px solid red;
 }
 @media (max-width:768px){
 
@@ -372,9 +371,64 @@ body {
 
 }
 }
+/* ========================================================= */
+/* إضافات الموبايل (Responsive) للصفحة الرئيسية (Home) */
+/* ========================================================= */
+@media (max-width: 768px) {
+  body {
+    padding: 10px 0;
+  }
+
+  /* تظبيط شريط التنقل العلوي (الناف بار) */
+  .top-nav {
+    width: 95%;
+    height: auto; /* بيلغي الارتفاع الثابت عشان يستوعب العناصر لما تنزل تحت بعض */
+    flex-direction: column;
+    padding: 15px 10px;
+    gap: 15px;
+    margin-top: 10px;
+  }
+
+  /* تظبيط الروابط والزراير جوه الناف بار */
+  .top-nav > div, 
+  .top-nav nav {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    text-align: center;
+  }
+
+  /* تظبيط النصوص الرئيسية */
+  .hero-section, 
+  .hero-text {
+    padding: 20px 10px;
+    text-align: center;
+  }
+
+  .hero-text h1 {
+    font-size: 26px; /* تصغير الخط شوية عشان يناسب شاشة الموبايل */
+  }
+
+  /* تظبيط المربعات بتاعة المميزات (الكروت اللي تحت) */
+  .features-container,
+  .features-wrapper {
+    display: flex;
+    flex-direction: column; /* بيخلي الكروت تنزل تحت بعض بدل جنب بعض */
+    align-items: center;
+    gap: 20px;
+    padding: 10px;
+    width: 100%;
+  }
+
+  .feature-box {
+    width: 100%;
+    max-width: 350px;
+    margin: 0 auto;
+  }
+}
   </style>
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"></head>
 <body>
   <!-- Top Navbar -->
 <nav class="navbar navbar-expand bg-light">
@@ -515,5 +569,6 @@ body {
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 </body>
 </html>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 
