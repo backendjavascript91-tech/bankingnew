@@ -251,23 +251,15 @@ try {
     showError(data.message || "error creating account");
     return;
   }
+ 
 
 
-   const userData = {
-  _id: data.user._id,
-  firstName: data.user.firstName,
-  lastName: data.user.lastName,
-  username: data.user.username,
-  email: data.user.email,
-  phone: data.user.phone,
-  nationalId: data.user.nationalId,
-  dob: data.user.dob,        // ✅ السطر المهم
-  balance: data.user.balance ?? 0
-};
 
-localStorage.setItem("currentUser", JSON.stringify(userData));
 showSuccess(" Account created successfully");
-
+setTimeout(() => {
+  localStorage.setItem("verifyUserId", data.userId);
+  window.location.href = "verify.html";
+}, 800);
 setTimeout(() => {
 
   document.querySelector('button[type="submit"]').style.display = "none";
@@ -321,9 +313,7 @@ document.querySelectorAll("input").forEach(input => {
 });
 
 const submitBtn = document.querySelector('button[type="submit"]');
-submitBtn.disabled = true;
-submitBtn.textContent = "Processing...";
-submitBtn.disabled = false;
+
 const passwordInput = document.getElementById("password");
 const suggestionBox = document.getElementById("passwordSuggestion");
 

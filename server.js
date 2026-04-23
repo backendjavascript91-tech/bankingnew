@@ -13,7 +13,7 @@ const atmRoutes = require("./routes/trans");
 const Transaction = require("./models/Transaction");
 const Card = require("./models/card");
 const Contact = require("./models/contact");
-const { sendWelcomeEmail } = require("./utils/email");
+const { sendOtpEmail } = require("./utils/email");
 
 
 
@@ -39,8 +39,22 @@ const limiter = rateLimit({
     app.use(cors());
     app.use(express.json());
     app.use(express.static("public"));
-    app.use(helmet());
+    app.use(helmet({
+  contentSecurityPolicy: false
+}));
+app.use(limiter);
     app.disable("x-powered-by");
+
+
+
+app.use((req, res, next) => {
+  res.setHeader("Strict-Transport-Security", "max-age=31536000; includeSubDomains");
+  res.setHeader("X-Content-Type-Options", "nosniff");
+  res.setHeader("X-Frame-Options", "DENY");
+  res.setHeader("X-XSS-Protection", "1; mode=block");
+  next();
+});
+
      app.use("/atm", atmRoutes);
 
 mongoose.set("strictQuery", true);
@@ -159,13 +173,20 @@ console.log("existUser:", existUser); // 👈 حطه هنا
     // ✅ 8. Save
  
 // Save
+const otp = Math.floor(100000 + Math.random() * 900000);
+
+newUser.emailOtp = otp.toString();
+newUser.otpExpires = new Date(Date.now() + 10 * 60 * 1000);
+
 await newUser.save();
 
-await sendWelcomeEmail(newUser.email, newUser.firstName);
+// 🔥 ابعت OTP
+await sendOtpEmail(newUser.email, otp);
 
+// 🔥 رد واحد بس
 res.status(201).json({
-  message: "User registered successfully",
-  user: newUser
+  message: "OTP sent to email",
+  userId: newUser._id
 });
 
 // بعد الرد
@@ -175,6 +196,37 @@ res.status(201).json({
 
   } catch (err) {
     console.log(err);
+    res.status(500).json({ message: "Server error" });
+  }
+});
+
+app.post("/verify-email", async (req, res) => {
+  try {
+    const { userId, otp } = req.body;
+
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    if (user.emailOtp !== otp) {
+      return res.status(400).json({ message: "Invalid OTP" });
+    }
+
+    if (user.otpExpires < Date.now()) {
+      return res.status(400).json({ message: "OTP expired" });
+    }
+
+    user.isVerified = true;
+    user.emailOtp = null;
+    user.otpExpires = null;
+
+    await user.save();
+
+    res.json({ message: "Verified successfully" });
+
+  } catch (err) {
     res.status(500).json({ message: "Server error" });
   }
 });
@@ -191,12 +243,21 @@ res.status(201).json({
         }
 
         // 2️⃣ دور على المستخدم بالـ username
-        const user = await User.findOne({ username });
-        if (!user) {
-          return res
-            .status(401)
-            .json({ message: "error username or password" });
-        }
+const user = await User.findOne({ username });
+
+// 1️⃣ نتأكد إنه موجود
+if (!user) {
+  return res.status(401).json({
+    message: "Invalid username or password"
+  });
+}
+
+// 2️⃣ نتأكد إنه verified
+if (!user.isVerified) {
+  return res.status(403).json({
+    message: "Please verify your email first"
+  });
+}
         // 🔐 لو الحساب مقفول
         if (user.lockUntil && user.lockUntil > Date.now()) {
          return res.status(403).json({
@@ -550,14 +611,14 @@ if (user.loginAttempts >= 4) {
     });
 
 
-    app.get("/", (req, res) => {
-      res.redirect("/home.html");
-    });
+ 
 
     // ✅ مهم لـ Playwright
     app.get("/health", (req, res) => {
       res.status(200).send("ok");
     });
+
+const path = require("path");
 
 
 app.listen(PORT, () => {

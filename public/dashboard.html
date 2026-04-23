@@ -4,6 +4,12 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Bank Dashboard</title>
+  <script>
+  // 🔒 حماية الصفحة
+  if (localStorage.getItem("isLoggedIn") !== "true") {
+    window.location.href = "login.html";
+  }
+</script>
 
   
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
@@ -37,8 +43,8 @@
           <a href="bank.html"><img src="image/arrows.png" class="icon">TRANSFER</a>
           <a href="card.html"><img src="image/card.png" class="icon">CARD</a>
           <a href="profile.html"><img src="image/account.png" class="icon">PROFILE</a>
-          <a href="login.html" id="logoutBtn">
-  <img src="image/logout.png" class="icon">LOG OUT
+<a href="#" id="logoutBtn">
+    <img src="image/logout.png" class="icon">LOG OUT
 </a>
         </div>
       </div>
