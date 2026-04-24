@@ -66,12 +66,14 @@ const userData = {
 };
 
 
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("currentUser", JSON.stringify(userData));
-localStorage.setItem("isLoggedIn", "true");
-     showLoginMessage("Login successful", "success");
-      window.location.href = "dashboard.html";
+      sessionStorage.setItem("token", data.token);
 
+      sessionStorage.setItem("currentUser", JSON.stringify(userData));
+      sessionStorage.setItem("isLoggedIn", "true");
+     showLoginMessage("Login successful ✅ Redirecting...", "success");
+setTimeout(() => {
+  window.location.href = "dashboard.html";
+}, 1000);
     } catch (err) {
       console.error("Fetch error:", err);
       showLoginMessage("Server error. Please try again later.", "error");

@@ -3,28 +3,22 @@
     document.addEventListener("DOMContentLoaded", async () => {
     
       // 1️⃣ نجيب بيانات المستخدم من localStorage
-      const stored = localStorage.getItem("currentUser");
+      const stored = sessionStorage.getItem("currentUser");
 
       if (!stored) {
-        alert("log in first");
-        window.location.href = "login.html";
-        return;
+     window.location.href = "login.html";
+return;
       }
 
       const localUser = JSON.parse(stored);
 
-      if (!localUser._id) {
-        alert("incomplete user data");
-        window.location.href = "login.html";
-        return;
-      }
+    let user;
 
       try {
         // 2️⃣ نجيب أحدث بيانات المستخدم من السيرفر
         if (!localUser._id) {
-  alert("Invalid user ID");
   window.location.href = "login.html";
-  return;
+return;
 }
 
 const res = await fetch(`/user/${localUser._id}`);
@@ -32,10 +26,10 @@ const res = await fetch(`/user/${localUser._id}`);
           throw new Error("User not found");
         }
 
-        const user = await res.json();
+        user = await res.json();
 
         // 3️⃣ نحدّث localStorage بآخر بيانات
-        localStorage.setItem("currentUser", JSON.stringify(user));
+        sessionStorage.setItem("currentUser", JSON.stringify(user));
         // 4️⃣ نعرض الاسم والرصيد
         document.getElementById("fullname").textContent =
           `${user.firstName} ${user.lastName}`;
@@ -73,20 +67,12 @@ const res = await fetch(`/user/${localUser._id}`);
         console.error(err);
         alert("error to loade data");
       }
-    });
+  
   
 
   
-    document.addEventListener("DOMContentLoaded", async () => {
 
-      const stored = localStorage.getItem("currentUser");
-      if (!stored) {
-        alert("log in first");
-        window.location.href = "login.html";
-        return;
-      }
-
-      const user = JSON.parse(stored);
+    
 
       try {
 const res = await fetch(`/transactions/${user._id}`)
@@ -99,12 +85,12 @@ const res = await fetch(`/transactions/${user._id}`)
           box.className = "transaction-box";
 let title = "";
 let details = "";
-
+ let amountSign = "";
 if (t.source === "ATM") {
 
   title = "ATM Transaction";
   details = `Type: ${t.type}`;
-  amountSign = "";
+ amountSign = "-";
 
 }
 
@@ -115,7 +101,7 @@ else if (t.direction === "out") {
   To: ${t.beneficiaryName}<br>
   Bank: ${t.source}
   `;
-  amountSign = "";
+   amountSign = "";
 
 }
 
@@ -126,8 +112,7 @@ else if (t.direction === "in") {
   From: ${t.senderName}<br>
   Bank: ${t.source}
   `;
-  amountSign = "  ";
-
+amountSign = "+";
 }
 
 else {
@@ -197,16 +182,16 @@ overlay.classList.add("active");
 
       } catch (err) {
         console.error(err);
-        alert("error loading");
+        console.error("error loading");
       }
-    });
-document.addEventListener("DOMContentLoaded", function () {
+    
+
   document.getElementById("logoutBtn").addEventListener("click", function(e) {
     e.preventDefault();
-    localStorage.removeItem("isLoggedIn");
-    window.location.href = "login.html";
+    sessionStorage.clear();
+window.location.href = "login.html";
   });
-});
+
 document.getElementById("closeModal").onclick = () => {
 document.getElementById("transactionOverlay").classList.remove("active");
 };
@@ -276,7 +261,4 @@ alert("Receipt copied to clipboard");
 
 });
   
-document.getElementById("logoutBtn").addEventListener("click", function() {
-  localStorage.removeItem("isLoggedIn");
-  window.location.href = "login.html";
-});
+  });

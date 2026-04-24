@@ -1,4 +1,14 @@
+function showMessage(text, type) {
+  const msg = document.getElementById("successMessage");
 
+  msg.textContent = text;
+  msg.className = "form-message " + type;
+  showMessage("Message sent successfully ✅", "success");
+
+  setTimeout(() => {
+    msg.style.display = "none";
+  }, 3000);
+}
 document.querySelector("form").addEventListener("submit", async function(e) {
   e.preventDefault();
 
@@ -16,6 +26,11 @@ document.querySelector("form").addEventListener("submit", async function(e) {
   });
 
   const data = await res.json();
+
+if (!res.ok) {
+  showMessage(data.message || "Something went wrong ❌", "error");
+  return;
+}
 const msg = document.getElementById("successMessage");
 
 msg.style.display = "block";

@@ -166,8 +166,7 @@ document.getElementById("registerForm").addEventListener("submit", async (e) => 
   const nationalId = document.getElementById("nationalId").value.trim();
   const email = document.getElementById("email").value.trim();
   const phone = document.getElementById("phonenumber").value.trim();
-  const form = document.getElementById("registerForm");
-
+  
 
 
 
@@ -255,9 +254,10 @@ try {
 
 
 
-showSuccess(" Account created successfully");
+showSuccess("Account created successfully 🎉 Redirecting...");
+document.querySelector('button[type="submit"]').disabled = true;
 setTimeout(() => {
-  localStorage.setItem("verifyUserId", data.userId);
+  sessionStorage.setItem("verifyUserId", data.userId);
   window.location.href = "verify.html";
 }, 800);
 setTimeout(() => {
@@ -289,6 +289,20 @@ document.getElementById("addCardBtn").addEventListener("click", () => {
 });
 
 document.getElementById("skipCardBtn").addEventListener("click", () => {
+
+  const userId = sessionStorage.getItem("verifyUserId");
+
+if (!userId) {
+  window.location.href = "login.html";
+  return;
+}
+
+  sessionStorage.setItem("currentUser", JSON.stringify({
+    _id: userId
+  }));
+
+  sessionStorage.setItem("isLoggedIn", "true");
+
   window.location.href = "dashboard.html";
 });
 
