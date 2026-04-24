@@ -15,17 +15,15 @@ function showCardMessage(text, type) {
   }, 6000);
 }
 
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+ const user = JSON.parse(sessionStorage.getItem("currentUser"));
 
 if (!user || !user._id) {
-  showCardMessage("Please log in first", "error");
-
-  setTimeout(() => {
-    window.location.href = "login.html";
-  }, 1500);
-
+  window.location.href = "login.html";
   return;
 }
+
+// 👇 بعد التأكد بقى
+
 
 
   // عناصر الكارت الأخضر
@@ -38,12 +36,16 @@ if (!user || !user._id) {
 const cardNumberEl = document.getElementById("cardNumber");
 const expDateEl    = document.getElementById("cardExpiry");
 const cardTypeEl   = document.getElementById("cardType");
+const fullName = (user.firstName + " " + user.lastName).toUpperCase();
+
+liveName.textContent = fullName;
+cardNameEl.textContent = fullName;
 
   try {
    const res = await fetch(`/card/${user._id}`);
     const data = await res.json();
 
-  if (!res.ok) {
+  if (!data.card) {
   liveName.textContent = "No Card";
   liveNumber.textContent = "**** **** **** ****";
   liveExp.textContent = "--/--";
@@ -103,12 +105,5 @@ document.getElementById("toggleCard").addEventListener("click", function () {
   }
 });
 
-const user = JSON.parse(localStorage.getItem("currentUser"));
 
-  if (user) {
-    const fullName = (user.firstName + " " + user.lastName).toUpperCase();
-
-    document.getElementById("liveName").textContent = fullName;
-    document.getElementById("detailsName").textContent = fullName;
-  }
-
+  

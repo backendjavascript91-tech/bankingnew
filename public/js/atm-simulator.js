@@ -4,7 +4,7 @@ document.addEventListener("DOMContentLoaded", () => {
   const messageBox = document.getElementById("atmMessage");
   const backBtn = document.getElementById("backBtn");
 
-  const session = JSON.parse(localStorage.getItem("atmSession"));
+  const session = JSON.parse(sessionStorage.getItem("atmSession"));
 
   if (session) {
     document.getElementById("amount").value = session.amount;
@@ -21,29 +21,39 @@ document.addEventListener("DOMContentLoaded", () => {
     const otpInput = document.getElementById("otp").value.trim();
     const amountInput = Number(document.getElementById("amount").value);
 
-    const user = JSON.parse(localStorage.getItem("currentUser"));
+    const user = JSON.parse(sessionStorage.getItem("currentUser"));
 
     if (!pin || !otpInput || !amountInput) {
       showMessage("All fields are required ❌", "error");
       return;
     }
 
-    if (!user) {
-      showMessage("Please login again ❌", "error");
-      return;
-    }
+if (!user) {
+  showMessage("Session expired ❌", "error");
 
-    if (!session) {
-      showMessage("No active session ❌", "error");
-      return;
-    }
+  setTimeout(() => {
+    window.location.href = "login.html";
+  }, 1500);
+
+  return;
+}
+
+ if (!session) {
+  showMessage("No active session ❌", "error");
+
+  setTimeout(() => {
+    window.location.href = "atm.html";
+  }, 1500);
+
+  return;
+}
 
     const now = Date.now();
     const diff = now - session.createdAt;
 
     if (diff > 5 * 60 * 1000) {
       showMessage("OTP expired ⏳", "error");
-      localStorage.removeItem("atmSession");
+      sessionStorage.removeItem("atmSession");
       return;
     }
 
@@ -83,9 +93,9 @@ document.addEventListener("DOMContentLoaded", () => {
       // ✅ نجاح
       showMessage("Withdrawal successful 💸", "success");
 
-      localStorage.removeItem("atmSession");
+      sessionStorage.removeItem("atmSession");
 
-      localStorage.setItem("currentUser", JSON.stringify({
+      sessionStorage.setItem("currentUser", JSON.stringify({
         ...user,
         balance: data.newBalance
       }));

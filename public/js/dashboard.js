@@ -3,33 +3,32 @@
     document.addEventListener("DOMContentLoaded", async () => {
     
       // 1️⃣ نجيب بيانات المستخدم من localStorage
-      const stored = localStorage.getItem("currentUser");
+      const stored = sessionStorage.getItem("currentUser");
 
       if (!stored) {
-        alert("log in first");
-        window.location.href = "login.html";
-        return;
-      }
+  alert("Session expired, login again");
+  return;
+}
 
       const localUser = JSON.parse(stored);
 
-      if (!localUser._id) {
-        alert("incomplete user data");
-        window.location.href = "login.html";
-        return;
-      }
+    
 
       try {
         // 2️⃣ نجيب أحدث بيانات المستخدم من السيرفر
-        const res = await fetch(`/user/${localUser._id}`)
+  if (!localUser._id) {
+  console.log("Invalid user ID");
+  return;
+}
+const res = await fetch(`/user/${localUser._id}`);
         if (!res.ok) {
-          throw new Error("User not found");
-        }
-
+  console.log("User fetch failed");
+  return;
+}
         const user = await res.json();
 
         // 3️⃣ نحدّث localStorage بآخر بيانات
-        localStorage.setItem("currentUser", JSON.stringify(user));
+        sessionStorage.setItem("currentUser", JSON.stringify(user));
         // 4️⃣ نعرض الاسم والرصيد
         document.getElementById("fullname").textContent =
           `${user.firstName} ${user.lastName}`;
@@ -67,18 +66,12 @@
         console.error(err);
         alert("error to loade data");
       }
-    });
+  
   
 
   
-    document.addEventListener("DOMContentLoaded", async () => {
 
-      const stored = localStorage.getItem("currentUser");
-      if (!stored) {
-        alert("log in first");
-        window.location.href = "login.html";
-        return;
-      }
+    
 
       const user = JSON.parse(stored);
 
@@ -98,7 +91,7 @@ if (t.source === "ATM") {
 
   title = "ATM Transaction";
   details = `Type: ${t.type}`;
-  amountSign = "";
+  let amountSign = "";
 
 }
 
@@ -109,7 +102,7 @@ else if (t.direction === "out") {
   To: ${t.beneficiaryName}<br>
   Bank: ${t.source}
   `;
-  amountSign = "";
+   amountSign = "";
 
 }
 
@@ -193,14 +186,14 @@ overlay.classList.add("active");
         console.error(err);
         alert("error loading");
       }
-    });
-document.addEventListener("DOMContentLoaded", function () {
+    
+
   document.getElementById("logoutBtn").addEventListener("click", function(e) {
     e.preventDefault();
-    localStorage.removeItem("isLoggedIn");
-    window.location.href = "login.html";
+    sessionStorage.clear();
+window.location.href = "login.html";
   });
-});
+
 document.getElementById("closeModal").onclick = () => {
 document.getElementById("transactionOverlay").classList.remove("active");
 };
@@ -270,7 +263,4 @@ alert("Receipt copied to clipboard");
 
 });
   
-document.getElementById("logoutBtn").addEventListener("click", function() {
-  localStorage.removeItem("isLoggedIn");
-  window.location.href = "login.html";
 });

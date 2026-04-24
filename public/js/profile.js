@@ -12,11 +12,10 @@
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const user = JSON.parse(sessionStorage.getItem("currentUser"));
 
   if (!user) {
-     showProfileMessage("Please login first", "error");
-    window.location.href = "login.html";
+      window.location.href = "login.html";
     return;
   }
 
@@ -52,7 +51,7 @@ input.value = document.getElementById(f).textContent;
 };
 
 saveBtn.onclick = async () => {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const user = JSON.parse(sessionStorage.getItem("currentUser"));
 
   const updatedData = {};
   
@@ -75,10 +74,13 @@ saveBtn.onclick = async () => {
   }
 
   const data = await res.json();
-  localStorage.setItem("currentUser", JSON.stringify(data.user));
+  sessionStorage.setItem("currentUser", JSON.stringify(data.user));
 
-  location.reload(); // 👈 الريلود التلقائي
-};
+showProfileMessage("Profile updated successfully ✅", "success");
+
+setTimeout(() => {
+  location.reload();
+}, 1000);};
 
 
 document.getElementById("changePassBtn").onclick = () => {
@@ -86,7 +88,7 @@ document.getElementById("changePassBtn").onclick = () => {
 };
 
 document.getElementById("savePassBtn").onclick = async () => {
-  const user = JSON.parse(localStorage.getItem("currentUser"));
+  const user = JSON.parse(sessionStorage.getItem("currentUser"));
 
  const oldPass = document.getElementById("oldPass").value;
 const newPass = document.getElementById("newPass").value;

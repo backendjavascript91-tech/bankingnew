@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="image/logo.png">
+<link rel="apple-touch-icon" href="image/logo.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Verify Email</title>
@@ -89,7 +91,7 @@
 </div>
 
 <script>
-    if (!localStorage.getItem("verifyUserId")) {
+if (!sessionStorage.getItem("verifyUserId") && !localStorage.getItem("verifyUserId")) {
   window.location.href = "register.html";
 }
 document.getElementById("verifyBtn").addEventListener("click", async () => {
@@ -134,14 +136,26 @@ btn.textContent = "Verifying...";
     msg.style.color = "green";
 
     // بعد النجاح → يروح login
-    setTimeout(() => {
-  localStorage.setItem("verifiedUserId", userId);
+setTimeout(() => {
 
-// 🧹 امسح القديم
-localStorage.removeItem("verifyUserId");
+  // ✅ ده كان موجود
+sessionStorage.setItem("verifiedUserId", userId);
 
-window.location.href = "add_card.html";
-    }, 1500);
+  // 🔥 ده الحل
+sessionStorage.setItem("currentUser", JSON.stringify({
+  _id: userId
+}));
+
+
+  // 🔥 مهم علشان الداش يفتح
+  sessionStorage.setItem("isLoggedIn", "true");
+
+  // تنظيف القديم
+  localStorage.removeItem("verifyUserId");
+
+  window.location.href = "add_card.html";
+
+}, 1500);
 
   } 
 catch (err) {
