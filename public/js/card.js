@@ -1,109 +1,155 @@
-
 document.addEventListener("DOMContentLoaded", async () => {
-const addCardBox = document.getElementById("addCardBox");
 
-function showCardMessage(text, type) {
-  const msg = document.getElementById("cardMessage");
-  if (!msg) return;
+  // =========================
+  // 🔒 CHECK SESSION
+  // =========================
+  const stored = sessionStorage.getItem("currentUser");
 
-  msg.textContent = text;
-  msg.className = "form-message " + type;
-  msg.style.display = "block";
+  if (!stored) {
+    window.location.href = "login.html";
+    return;
+  }
 
-  setTimeout(() => {
-    msg.style.display = "none";
-  }, 6000);
-}
+  let user;
+  try {
+    user = JSON.parse(stored);
+  } catch {
+    sessionStorage.clear();
+    window.location.href = "login.html";
+    return;
+  }
 
- const user = JSON.parse(sessionStorage.getItem("currentUser"));
+  if (!user._id) {
+    window.location.href = "login.html";
+    return;
+  }
 
-if (!user || !user._id) {
-  window.location.href = "login.html";
-  return;
-}
+  // =========================
+  // 🧾 ELEMENTS
+  // =========================
+  const addCardBox = document.getElementById("addCardBox");
 
-// 👇 بعد التأكد بقى
-
-
-
-  // عناصر الكارت الأخضر
   const liveName   = document.getElementById("liveName");
   const liveNumber = document.getElementById("liveNumber");
   const liveExp    = document.getElementById("liveExp");
 
-  // عناصر Card Details (زي البروفايل)
-  const cardNameEl = document.getElementById("detailsName");
-const cardNumberEl = document.getElementById("cardNumber");
-const expDateEl    = document.getElementById("cardExpiry");
-const cardTypeEl   = document.getElementById("cardType");
-const fullName = (user.firstName + " " + user.lastName).toUpperCase();
+  const cardNameEl   = document.getElementById("detailsName");
+  const cardNumberEl = document.getElementById("cardNumber");
+  const expDateEl    = document.getElementById("cardExpiry");
+  const cardTypeEl   = document.getElementById("cardType");
 
-liveName.textContent = fullName;
-cardNameEl.textContent = fullName;
+  const toggleBtn = document.getElementById("toggleCard");
 
-  try {
-   const res = await fetch(`/card/${user._id}`);
-    const data = await res.json();
+  // =========================
+  // 🧠 FULL NAME
+  // =========================
+  const fullName = `${user.firstName} ${user.lastName}`.toUpperCase();
 
-  if (!data.card) {
-  liveName.textContent = "No Card";
-  liveNumber.textContent = "**** **** **** ****";
-  liveExp.textContent = "--/--";
+  liveName.textContent = fullName;
+  cardNameEl.textContent = fullName;
 
-  cardNameEl.textContent = "-";
-  cardNumberEl.textContent = "-";
-  expDateEl.textContent = "-";
-  cardTypeEl.textContent = "-";
+  // =========================
+  // 📢 MESSAGE
+  // =========================
+  function showCardMessage(text, type) {
+    const msg = document.getElementById("cardMessage");
+    if (!msg) return;
 
-  document.querySelector(".payment-form").style.display = "none";
-  addCardBox.style.display = "block";
+    msg.textContent = text;
+    msg.className = "form-message " + type;
+    msg.style.display = "block";
 
-  return;
-}
-
-
-    const card = data.card;
-let fullCardNumber = card.accountNumber;
-let isVisible = false;
-
-const last4 = fullCardNumber.slice(-4);
-
-// عرض افتراضي بالنجوم
-liveNumber.textContent = "**** **** **** " + last4;
-cardNumberEl.textContent = "**** **** **** " + last4;
-
-// زرار الإظهار
-document.getElementById("toggleCard").addEventListener("click", function () {
-
-  if (!isVisible) {
-    liveNumber.textContent = fullCardNumber;
-    cardNumberEl.textContent = fullCardNumber;
-    document.getElementById("toggleCard").textContent = "hide number";
-    isVisible = true;
-  } else {
-    liveNumber.textContent = "**** **** **** " + last4;
-    cardNumberEl.textContent = "**** **** **** " + last4;
-    document.getElementById("toggleCard").textContent = "show num";
-    isVisible = false;
+    setTimeout(() => {
+      msg.style.display = "none";
+    }, 5000);
   }
 
-});
+  // =========================
+  // 💳 GET CARD
+  // =========================
+  try {
+    const res = await fetch(`/card/${user._id}`);
 
+    if (!res.ok) throw new Error("Card fetch failed");
 
+    const data = await res.json();
 
+    // ❌ مفيش كارت
+    if (!data.card) {
 
-    // تاريخ الانتهاء
+      liveName.textContent = "No Card";
+      liveNumber.textContent = "**** **** **** ****";
+      liveExp.textContent = "--/--";
+
+      cardNameEl.textContent = "-";
+      cardNumberEl.textContent = "-";
+      expDateEl.textContent = "-";
+      cardTypeEl.textContent = "-";
+
+      document.querySelector(".payment-form").style.display = "none";
+      addCardBox.style.display = "block";
+
+      return;
+    }
+
+    // =========================
+    // ✅ CARD EXISTS
+    // =========================
+    const card = data.card;
+
+    const fullCardNumber = String(card.accountNumber);
+    const last4 = fullCardNumber.slice(-4);
+
+    let isVisible = false;
+
+    // display masked
+    const masked = "**** **** **** " + last4;
+
+    liveNumber.textContent = masked;
+    cardNumberEl.textContent = masked;
+
+    // toggle
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", () => {
+
+        if (!isVisible) {
+          liveNumber.textContent = fullCardNumber;
+          cardNumberEl.textContent = fullCardNumber;
+          toggleBtn.textContent = "hide number";
+          isVisible = true;
+        } else {
+          liveNumber.textContent = masked;
+          cardNumberEl.textContent = masked;
+          toggleBtn.textContent = "show num";
+          isVisible = false;
+        }
+
+      });
+    }
+
+    // expiry
     liveExp.textContent = card.expiryDate;
     expDateEl.textContent = card.expiryDate;
 
-    // نوع الكارت
+    // type
     cardTypeEl.textContent = card.cardType;
 
   } catch (err) {
     console.error(err);
     showCardMessage("Failed to load card data", "error");
   }
+
+  // =========================
+  // 🚪 LOGOUT
+  // =========================
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      sessionStorage.clear();
+      window.location.href = "login.html";
+    });
+  }
+
 });
-
-
-  
