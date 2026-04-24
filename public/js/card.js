@@ -23,10 +23,7 @@ if (!user || !user._id) {
 }
 
 // 👇 بعد التأكد بقى
-const fullName = (user.firstName + " " + user.lastName).toUpperCase();
 
-liveName.textContent = fullName;
-cardNameEl.textContent = fullName;
 
 
   // عناصر الكارت الأخضر
@@ -39,12 +36,16 @@ cardNameEl.textContent = fullName;
 const cardNumberEl = document.getElementById("cardNumber");
 const expDateEl    = document.getElementById("cardExpiry");
 const cardTypeEl   = document.getElementById("cardType");
+const fullName = (user.firstName + " " + user.lastName).toUpperCase();
+
+liveName.textContent = fullName;
+cardNameEl.textContent = fullName;
 
   try {
    const res = await fetch(`/card/${user._id}`);
     const data = await res.json();
 
-  if (!res.ok) {
+  if (!data.card) {
   liveName.textContent = "No Card";
   liveNumber.textContent = "**** **** **** ****";
   liveExp.textContent = "--/--";
