@@ -18,7 +18,7 @@
   </div>
 
   <ul>
-    <li><a href="home.html">Home</a></li>
+    <li><a href="index.html">index</a></li>
     <li><a href="about.html">About</a></li>
     <li><a href="contact.html">Contact</a></li>
     <li><a href="login.html">Login</a></li>
@@ -39,7 +39,7 @@
         <div class="step">
 <input type="text" id="firstname" class="form-control mb-3" placeholder="First Name" required>
 <input type="text" id="lastname" class="form-control mb-3" placeholder="Last Name" required>
-<input type="text" id="username" class="form-control mb-3" placeholder="Username" required>
+<input type="text" id="username" class="form-control mb-3"placeholder="Username" required oninput="checkUsername()">
 
 <button type="button" class="nextBtn btn btn-success w-100">Next</button>
         </div>
@@ -47,13 +47,15 @@
 <div class="step" style="display:none">
 
   <input 
-    type="text"
-    id="nationalId"
-    class="form-control mb-3"
-    placeholder="National id"
-    maxlength="14"
-    required
-  >
+  type="text"
+  id="nationalId"
+  class="form-control mb-3"
+  placeholder="National ID"
+  maxlength="14"
+  inputmode="numeric"
+  required
+>
+<span class="error-text" id="nidError"></span>
 
   <div class="buttons">
     <button type="button" class="backBtn btn btn-secondary">
@@ -70,12 +72,21 @@
 <!-- Step 3 -->
 <div class="step" style="display:none">
 
-  <input type="email" id="email" class="form-control mb-3" placeholder="Email" required>
+  <div class="email-wrapper">
+  <input type="text" id="emailUser" class="form-control mb-2" placeholder="Email username">
+
+  <select id="emailDomain" class="form-control mb-2">
+    <option value="@gmail.com">@gmail.com</option>
+    <option value="@icloud.com">@icloud.com</option>
+  </select>
+
   <span class="error-text" id="emailError"></span>
 
-  <input type="text" id="phonenumber" class="form-control mb-3" placeholder="Phone Number" required>
-  <span class="error-text" id="phoneError"></span>
+</div>
 
+  <input type="text" id="phonenumber" class="form-control mb-3"
+placeholder="Phone Number" maxlength="11"inputmode="numeric">
+<span class="error-text" id="phoneError"></span>
   <div class="buttons">
     <button type="button" class="backBtn btn btn-secondary">Back</button>
     <button type="button" class="nextBtn btn btn-success">Next</button>
@@ -159,9 +170,10 @@
 
 
         <div class="checkbox">
-          <input type="checkbox" required>
-          I agree to the <a href="#">Terms & Conditions</a>
-        </div>
+  <input type="checkbox" id="termsCheckbox">
+  I agree to the <a href="#">Terms & Conditions</a>
+</div>
+
 
         <div class="login">
           Already have an account? <a href="login.html">Log In</a>
@@ -174,5 +186,143 @@
 <script src="js/auth.js"></script>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const checkbox = document.getElementById("termsCheckbox");
+  const nextBtn = document.querySelector(".nextBtn");
+
+  // الحالة الابتدائية
+  nextBtn.disabled = !checkbox.checked;
+
+  // عند التغيير
+  checkbox.addEventListener("change", function () {
+    nextBtn.disabled = !this.checked;
+  });
+
+});
+</script>
+<script>
+const emailUser = document.getElementById("emailUser");
+const emailDomain = document.getElementById("emailDomain");
+const error = document.getElementById("emailError");
+const nextBtn = document.getElementById("nextBtn");
+
+let currentDomain = emailDomain.value;
+
+// تحديث عند تغيير الدومين
+emailDomain.addEventListener("change", function () {
+  currentDomain = this.value;
+  validate();
+});
+
+// منع أي كتابة بعد @ أو رموز غلط
+emailUser.addEventListener("input", function () {
+  let value = emailUser.value;
+
+  // ❌ منع أي @ أو دومين
+  value = value.replace(/@.*/, "");
+
+  // ❌ منع مسافات
+  value = value.replace(/\s/g, "");
+
+  emailUser.value = value;
+
+  validate();
+});
+
+// validation الرئيسي
+function validate() {
+  const username = emailUser.value.trim();
+
+  const fullEmail = username + currentDomain;
+
+  // حفظ الإيميل النهائي (لو هتبعته للباك)
+  document.getElementById("emailHidden")?.remove();
+
+  let hidden = document.createElement("input");
+  hidden.type = "hidden";
+  hidden.id = "emailHidden";
+  hidden.value = fullEmail;
+  document.body.appendChild(hidden);
+
+  // validation
+  if (username === "") {
+    error.textContent = "Email is required";
+    nextBtn.disabled = true;
+    return;
+  }
+
+  if (username.includes("@")) {
+    error.textContent = "Invalid email format";
+    nextBtn.disabled = true;
+    return;
+  }
+
+  error.textContent = "";
+  nextBtn.disabled = false;
+}
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const phone = document.getElementById("phonenumber");
+  const error = document.getElementById("phoneError");
+
+  if (!phone) return;
+
+  // 🔒 منع أي حاجة غير أرقام (حتى paste)
+  phone.addEventListener("input", function () {
+    this.value = this.value.replace(/[^0-9]/g, "").slice(0, 11);
+    validate();
+  });
+
+  function validate() {
+    const value = phone.value;
+
+    if (value.length === 0) {
+      error.textContent = "Phone number is required";
+    } 
+    else if (value.length < 11) {
+      error.textContent = "Phone number must be 11 digits";
+    } 
+    else {
+      error.textContent = "";
+    }
+  }
+
+});
+</script>
+<script>
+document.addEventListener("DOMContentLoaded", function () {
+
+  const nid = document.getElementById("nationalId");
+  const error = document.getElementById("nidError");
+
+  if (!nid) return;
+
+  nid.addEventListener("input", function () {
+    // 🔒 أرقام فقط + 14 رقم
+    this.value = this.value.replace(/[^0-9]/g, "").slice(0, 14);
+
+    validate();
+  });
+
+  function validate() {
+    const value = nid.value;
+
+    if (value.length === 0) {
+      error.textContent = "National ID is required";
+    } 
+    else if (value.length < 14) {
+      error.textContent = "National ID must be 14 digits";
+    } 
+    else {
+      error.textContent = "";
+    }
+  }
+
+});
+</script>
 </body>
 </html>
