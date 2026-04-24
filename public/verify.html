@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <link rel="icon" type="image/png" href="image/logo.png">
+<link rel="apple-touch-icon" href="image/logo.png">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Verify Email</title>
@@ -134,14 +136,25 @@ btn.textContent = "Verifying...";
     msg.style.color = "green";
 
     // بعد النجاح → يروح login
-    setTimeout(() => {
+setTimeout(() => {
+
+  // ✅ ده كان موجود
   localStorage.setItem("verifiedUserId", userId);
 
-// 🧹 امسح القديم
-localStorage.removeItem("verifyUserId");
+  // 🔥 ده الحل
+  localStorage.setItem("currentUser", JSON.stringify({
+    _id: userId
+  }));
 
-window.location.href = "add_card.html";
-    }, 1500);
+  // 🔥 مهم علشان الداش يفتح
+  sessionStorage.setItem("isLoggedIn", "true");
+
+  // تنظيف القديم
+  localStorage.removeItem("verifyUserId");
+
+  window.location.href = "add_card.html";
+
+}, 1500);
 
   } 
 catch (err) {
