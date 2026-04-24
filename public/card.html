@@ -1,125 +1,155 @@
-<!doctype html>
-<html lang="en" dir="ltr">
-<head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Card Payment Page</title>
-  <link rel="icon" type="image/png" href="image/logo.png">
-<link rel="apple-touch-icon" href="image/logo.png">
-<link rel="stylesheet" href="css/card.css">
-<script>
-  if (sessionStorage.getItem("isLoggedIn") !== "true") {
+document.addEventListener("DOMContentLoaded", async () => {
+
+  // =========================
+  // 🔒 CHECK SESSION
+  // =========================
+  const stored = sessionStorage.getItem("currentUser");
+
+  if (!stored) {
     window.location.href = "login.html";
+    return;
   }
-</script>
-<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
-</head>
 
-<body>
+  let user;
+  try {
+    user = JSON.parse(stored);
+  } catch {
+    sessionStorage.clear();
+    window.location.href = "login.html";
+    return;
+  }
 
-  <div class="card-container">
+  if (!user._id) {
+    window.location.href = "login.html";
+    return;
+  }
 
-    <header class="header">
-      <img src="https://i.postimg.cc/QCrwp4pC/Picsart-25-10-01-17-11-01-636.png">
-      <nav class="nav">
-        <a href="#">About</a>
-        <a href="contact.html">Contact</a>
-        <a href="login.html">Login</a>
-        <a href="register.html">Register</a>
-      </nav>
-    </header>
+  // =========================
+  // 🧾 ELEMENTS
+  // =========================
+  const addCardBox = document.getElementById("addCardBox");
 
-    <div class="body">
-<aside class="sidebar">
+  const liveName   = document.getElementById("liveName");
+  const liveNumber = document.getElementById("liveNumber");
+  const liveExp    = document.getElementById("liveExp");
 
-  <a href="dashboard.html" class="item">
-    <img src="https://i.postimg.cc/Dyp5hp80/dashboard.png" width="20">
-    <span>Dashboard</span>
-  </a>
+  const cardNameEl   = document.getElementById("detailsName");
+  const cardNumberEl = document.getElementById("cardNumber");
+  const expDateEl    = document.getElementById("cardExpiry");
+  const cardTypeEl   = document.getElementById("cardType");
 
-  <a href="bank.html" class="item active">
-    <img src="https://i.postimg.cc/J06F91fn/arrows.png" width="20">
-    <span>Transfer</span>
-  </a>
+  const toggleBtn = document.getElementById("toggleCard");
 
-  <a href="card.html" class="item">
-    <img src="https://i.postimg.cc/h41c2ThY/debit-card.png" width="20">
-    <span>Card</span>
-  </a>
+  // =========================
+  // 🧠 FULL NAME
+  // =========================
+  const fullName = `${user.firstName} ${user.lastName}`.toUpperCase();
 
-  <a href="profile.html" class="item">
-    <img src="https://i.postimg.cc/0292vZLx/account.png" width="20">
-    <span>Profile</span>
-  </a>
+  liveName.textContent = fullName;
+  cardNameEl.textContent = fullName;
 
-  <a href="#" class="item" id="logoutBtn">
-    <img src="https://i.postimg.cc/fycLKrpP/logout.png" width="20">
-    <span>Logout</span>
-  </a>
+  // =========================
+  // 📢 MESSAGE
+  // =========================
+  function showCardMessage(text, type) {
+    const msg = document.getElementById("cardMessage");
+    if (!msg) return;
 
-</aside>
+    msg.textContent = text;
+    msg.className = "form-message " + type;
+    msg.style.display = "block";
 
-      <main class="main">
+    setTimeout(() => {
+      msg.style.display = "none";
+    }, 5000);
+  }
 
-        <div class="credit-card">
-          <div>
-            <div style="font-size:18px;">VISA CARD</div>
-            <div class="credit-card-number" id="liveNumber">**** **** **** 5478</div>
-          </div>
+  // =========================
+  // 💳 GET CARD
+  // =========================
+  try {
+    const res = await fetch(`/card/${user._id}`);
 
-          <div class="cc-bottom">
-            <div>
-              <strong>NAME</strong><br> 
-<span id="liveName"></span>
-            </div>
-            <div>
-              <strong>EXP</strong><br> <span id="liveExp">12/29</span>
-            </div>
-          </div>
-        </div>
+    if (!res.ok) throw new Error("Card fetch failed");
 
-       <div class="payment-form">
-  <h3 style="margin-bottom:15px; color:#064a31;">Card Details</h3>
+    const data = await res.json();
 
-<div class="details-row">
-  <span class="label">Card Holder Name</span>
-  <span id="detailsName" class="value"></span>
-</div>
+    // ❌ مفيش كارت
+    if (!data.card) {
 
-  <div class="profile-row">
-    <span class="label">Card Number</span>
-    <span class="value">
-  <span id="cardNumber">-</span>
-  <button id="toggleCard" class="show-btn">show num</button>
-</span>
+      liveName.textContent = "No Card";
+      liveNumber.textContent = "**** **** **** ****";
+      liveExp.textContent = "--/--";
 
-  </div>
+      cardNameEl.textContent = "-";
+      cardNumberEl.textContent = "-";
+      expDateEl.textContent = "-";
+      cardTypeEl.textContent = "-";
 
-  <div class="profile-row">
-    <span class="label">Expiry Date</span>
-    <span class="value" id="cardExpiry">-</span>
-  </div>
+      document.querySelector(".payment-form").style.display = "none";
+      addCardBox.style.display = "block";
 
-  <div class="profile-row">
-    <span class="label">Card Type</span>
-    <span class="value" id="cardType">-</span>
-    <div id="cardMessage" class="form-message"></div>
-  </div>
-</div>
+      return;
+    }
 
-<div class="add-card-section" id="addCardBox" style="display:none;">
-  <a href="add_card.html" class="add-card-full">
-    + Add Card
-  </a>
+    // =========================
+    // ✅ CARD EXISTS
+    // =========================
+    const card = data.card;
 
-  <p class="no-card-text">
-    You don't have a card yet
-  </p>
-</div>
+    const fullCardNumber = String(card.accountNumber);
+    const last4 = fullCardNumber.slice(-4);
 
+    let isVisible = false;
 
+    // display masked
+    const masked = "**** **** **** " + last4;
 
-<script src="js/card.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
-</body>
-</html>
+    liveNumber.textContent = masked;
+    cardNumberEl.textContent = masked;
+
+    // toggle
+    if (toggleBtn) {
+      toggleBtn.addEventListener("click", () => {
+
+        if (!isVisible) {
+          liveNumber.textContent = fullCardNumber;
+          cardNumberEl.textContent = fullCardNumber;
+          toggleBtn.textContent = "hide number";
+          isVisible = true;
+        } else {
+          liveNumber.textContent = masked;
+          cardNumberEl.textContent = masked;
+          toggleBtn.textContent = "show num";
+          isVisible = false;
+        }
+
+      });
+    }
+
+    // expiry
+    liveExp.textContent = card.expiryDate;
+    expDateEl.textContent = card.expiryDate;
+
+    // type
+    cardTypeEl.textContent = card.cardType;
+
+  } catch (err) {
+    console.error(err);
+    showCardMessage("Failed to load card data", "error");
+  }
+
+  // =========================
+  // 🚪 LOGOUT
+  // =========================
+  const logoutBtn = document.getElementById("logoutBtn");
+
+  if (logoutBtn) {
+    logoutBtn.addEventListener("click", (e) => {
+      e.preventDefault();
+      sessionStorage.clear();
+      window.location.href = "login.html";
+    });
+  }
+
+});
