@@ -1,102 +1,111 @@
-
 document.addEventListener("DOMContentLoaded", () => {
   const form = document.getElementById("loginForm");
   if (!form) return;
 
-  function showLoginMessage(text, type) {
   const msg = document.getElementById("loginMessage");
+  const btn = form.querySelector("button");
 
-  msg.textContent = text;
-  msg.className = "form-message " + type;
-  msg.style.display = "block";
+  function showMessage(text, type) {
+    msg.textContent = text;
+    msg.className = "form-message " + type;
+    msg.style.display = "block";
 
-  if (type === "error") {
-    setTimeout(() => {
-      msg.style.display = "none";
-    }, 6000);
+    if (type === "error") {
+      setTimeout(() => {
+        msg.style.display = "none";
+      }, 5000);
+    }
   }
-}
-
-
-
 
   form.addEventListener("submit", async (e) => {
     e.preventDefault();
 
-    const usernameInput = document.getElementById("username").value.trim();
+    const username = document.getElementById("username").value.trim();
     const password = document.getElementById("password").value.trim();
 
-    if (!usernameInput || !password) {
-      showLoginMessage("Please fill all fields", "error");     
- return;
+    if (!username || !password) {
+      showMessage("Please fill all fields", "error");
+      return;
     }
 
-    try {
-    const response = await fetch(`/login`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-       body: JSON.stringify({ username: usernameInput, password }),
+    // 🔒 منع الضغط مرتين
+    btn.disabled = true;
+    btn.textContent = "Logging in...";
 
+    try {
+      const response = await fetch("/login", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
       });
 
-let data;
-
-try {
-  data = await response.json();
-} catch {
-  showLoginMessage("Invalid server response", "error");
-  return;
-}
-      if (!response.ok) {
-        showLoginMessage(data.message || "Username or password is incorrect", "error");
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        showMessage("Invalid server response", "error");
         return;
       }
 
-      // حفظ البيانات بالـ fullname للعرض في الداش
-const userData = {
-  _id: data.user._id,
-  firstName: data.user.firstName,
-  lastName: data.user.lastName,
-  username: data.user.username, 
-  email: data.user.email,
-  phone: data.user.phone,
-  nationalId: data.user.nationalId,
-  dob: data.user.dob,        // ✅
-  balance: data.user.balance ?? 0
-};
+      if (!response.ok) {
+        showMessage(data.message || "Login failed", "error");
+        return;
+      }
 
+      // ✅ تأكد إن اليوزر موجود
+      if (!data.user) {
+        showMessage("User data missing", "error");
+        return;
+      }
 
+      const userData = {
+        _id: data.user._id,
+        firstName: data.user.firstName,
+        lastName: data.user.lastName,
+        username: data.user.username,
+        email: data.user.email,
+        phone: data.user.phone,
+        nationalId: data.user.nationalId,
+        dob: data.user.dob,
+        balance: data.user.balance ?? 0
+      };
+
+      // 💾 session
       sessionStorage.setItem("token", data.token);
-
       sessionStorage.setItem("currentUser", JSON.stringify(userData));
       sessionStorage.setItem("isLoggedIn", "true");
-     showLoginMessage("Login successful ✅ Redirecting...", "success");
-window.location.href = "dashboard.html";
+
+      showMessage("Login successful ✅", "success");
+
+      // ⏳ سيبه ثانية عشان الرسالة تظهر
+      setTimeout(() => {
+        window.location.href = "dashboard.html";
+      }, 800);
+
     } catch (err) {
-      console.error("Fetch error:", err);
-      showLoginMessage("Server error. Please try again later.", "error");
+      console.error(err);
+      showMessage("Server error. Try again later.", "error");
+    } finally {
+      // 🔓 رجع الزرار
+      btn.disabled = false;
+      btn.textContent = "Login";
     }
   });
 });
+
 function togglePassword() {
-  const passwordInput = document.getElementById("password");
-  const eyeIcon = document.getElementById("eyeIcon");
+  const input = document.getElementById("password");
+  const icon = document.getElementById("eyeIcon");
 
-  if (!passwordInput) return;
+  if (!input) return;
 
-  if (passwordInput.type === "password") {
-    passwordInput.type = "text";
-    eyeIcon.classList.replace("fa-eye", "fa-eye-slash");
+  if (input.type === "password") {
+    input.type = "text";
+    icon.classList.replace("fa-eye", "fa-eye-slash");
   } else {
-    passwordInput.type = "password";
-    eyeIcon.classList.remove("fa-eye-slash");
-    eyeIcon.classList.add("fa-eye");
+    input.type = "password";
+    icon.classList.replace("fa-eye-slash", "fa-eye");
   }
 }
-
-
-
-
-
-
-
