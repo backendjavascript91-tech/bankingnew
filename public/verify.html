@@ -91,7 +91,7 @@
 </div>
 
 <script>
-    if (!localStorage.getItem("verifyUserId")) {
+if (!sessionStorage.getItem("verifyUserId") && !localStorage.getItem("verifyUserId")) {
   window.location.href = "register.html";
 }
 document.getElementById("verifyBtn").addEventListener("click", async () => {
@@ -139,12 +139,13 @@ btn.textContent = "Verifying...";
 setTimeout(() => {
 
   // ✅ ده كان موجود
-  localStorage.setItem("verifiedUserId", userId);
+sessionStorage.setItem("verifiedUserId", userId);
 
   // 🔥 ده الحل
-  localStorage.setItem("currentUser", JSON.stringify({
-    _id: userId
-  }));
+sessionStorage.setItem("currentUser", JSON.stringify({
+  _id: userId
+}));
+
 
   // 🔥 مهم علشان الداش يفتح
   sessionStorage.setItem("isLoggedIn", "true");

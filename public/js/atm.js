@@ -1,10 +1,11 @@
 
   // 🟢 المستخدم الحالي
-  const currentUser = JSON.parse(localStorage.getItem("currentUser"));
 document.addEventListener("DOMContentLoaded", () => {
+  const currentUser = JSON.parse(sessionStorage.getItem("currentUser"));
+    
+
 if (!currentUser) {
-  alert("Please login first");
-  window.location.href = "atm.html#return";
+  window.location.href = "login.html";
   return;
 }
 let otpActive = false;
@@ -23,7 +24,6 @@ function startOtpTimer(durationInSeconds) {
     timerElement.textContent = `Valid for: ${minutes}:${seconds < 10 ? "0" : ""}${seconds}`;
 
     timeLeft--;
-
     if (timeLeft < 0) {
       otpActive = false;
 generateBtn.disabled = false;
@@ -42,6 +42,7 @@ timerElement.style.background = "rgba(231, 76, 60, 0.1)";
   const pinInput = document.getElementById("pin");
   const amountInput = document.getElementById("amount");
 const resendBtn = document.getElementById("resendOtp");
+const generateBtn = document.getElementById("generateOtp");
 
 if (resendBtn) {
   resendBtn.addEventListener("click", async () => {
@@ -69,10 +70,16 @@ generateBtn.disabled = true;
         showATMMessage(data.message, "error");
         return;
       }
-
+const timerElement = document.getElementById("otpTimer");
      showATMMessage("Your OTP is: " + data.otp, "success");
 timerElement.style.color = "#2ecc71";
 timerElement.style.background = "rgba(46, 204, 113, 0.1)";
+sessionStorage.setItem("atmSession", JSON.stringify({
+  otp: data.otp,
+  amount: Number(amountInput.value),
+  atmCode: atmCodeInput.value.trim(),
+  createdAt: Date.now()
+}));
       // 🔁 يبدأ timer من جديد
       startOtpTimer(300);
 
@@ -107,8 +114,7 @@ timerElement.style.background = "rgba(46, 204, 113, 0.1)";
 
 
 
-  const generateBtn = document.getElementById("generateOtp");
-    const session = JSON.parse(localStorage.getItem("atmSession"));
+    const session = JSON.parse(sessionStorage.getItem("atmSession"));
 
 if (session) {
   document.getElementById("amount").value = session.amount;
@@ -128,7 +134,7 @@ if (session) {
 
     startOtpTimer(remainingTime); // 👈 بدل 300
   } else {
-    localStorage.removeItem("atmSession");
+   sessionStorage.removeItem("atmSession");
   }
 }
   // 🟢 رسائل
@@ -210,7 +216,7 @@ showATMMessage("Your OTP is: " + data.otp, "success");
 otpActive = true;              // 👈 مهم
 generateBtn.disabled = true;   // 👈 مهم
 
-localStorage.setItem("atmSession", JSON.stringify({
+sessionStorage.setItem("atmSession", JSON.stringify({
   otp: data.otp,
   amount: amount,
   atmCode: atmCode,
@@ -231,7 +237,7 @@ resendBtn.classList.add("hidden");
   if (logoutBtn) {
     logoutBtn.addEventListener("click", function (e) {
       e.preventDefault();
-      localStorage.removeItem("currentUser");
+      sessionStorage.removeItem("currentUser");
       window.location.href = "login.html";
     });
   }

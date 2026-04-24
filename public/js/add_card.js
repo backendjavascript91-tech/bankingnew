@@ -1,14 +1,27 @@
 
 document.getElementById("cardForm").addEventListener("submit", async function(e) {
   e.preventDefault();
-const userId = localStorage.getItem("verifiedUserId");
-console.log("Using verifiedUserId:", userId);
+     const messageDiv = document.getElementById("cardMessage");
+    const user = JSON.parse(sessionStorage.getItem("currentUser"));
+const userId = user?._id;
+
+console.log("Using userId:", userId);
 
 if (!userId) {
-  console.log("No verified user, waiting...");
+  messageDiv.style.display = "block";
+messageDiv.textContent = "Session expired, please login again";
+messageDiv.className = "message error";
+
+setTimeout(() => {
+  window.location.href = "login.html";
+
+}, 1500);
   return;
 }
-  const messageDiv = document.getElementById("cardMessage");
+
+
+
+ 
 
   const cardName = document.getElementById("cardName").value;
   const accountNumber = document.getElementById("accountNumber").value;
@@ -28,7 +41,17 @@ if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
   return;
 }
   try {
-
+if (!cardName || !accountNumber || !cvv || !cardPassword) {
+  messageDiv.style.display = "block";
+  messageDiv.textContent = "❌ Please fill all fields";
+  messageDiv.className = "message error";
+  return;
+}
+if (cvv.length !== 3) {
+  messageDiv.textContent = "❌ CVV must be 3 digits";
+  messageDiv.className = "message error";
+  return;
+}
     const response = await fetch(`/add-card`,{
       method: "POST",
       headers: {
@@ -55,7 +78,7 @@ if (!/^(0[1-9]|1[0-2])\/\d{2}$/.test(expiryDate)) {
 
       // بعد ثانيتين يروح للدashboard
       setTimeout(() => {
-        localStorage.setItem("isLoggedIn", "true");
+      
 window.location.href = "dashboard.html";
       }, 3000);
 

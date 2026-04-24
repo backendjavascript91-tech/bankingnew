@@ -5,7 +5,11 @@
   <title>ATM Simulator</title>
   <link rel="icon" type="image/png" href="image/logo.png">
 <link rel="apple-touch-icon" href="image/logo.png">
- 
+ <script>
+  if (!sessionStorage.getItem("currentUser")) {
+  window.location.href = "login.html";
+}
+ </script>
   <link rel="stylesheet" href="css/atm-simulator.css">
 </head>
 
