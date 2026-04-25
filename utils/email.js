@@ -5,7 +5,7 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 async function sendOtpEmail(to, otp) {
   try {
     const data = await resend.emails.send({
-      from: "Agripay Bank <gripay.site>",
+      from: "Agripay Bank <no-reply@agripay.site>",
       to: to,
       subject: "Your Verification Code 🔐",
       html: `
@@ -34,27 +34,27 @@ async function sendOtpEmail(to, otp) {
 }
 
 
-module.exports = { sendOtpEmail };
+
 
 async function sendWelcomeEmail(to, username) {
   try {
     await resend.emails.send({
-      from: "Agripay Bank <no-reply@agripay.online>",
+      from: "Agripay Bank <no-reply@agripay.site>",
       to: to,
-      subject: "Welcome to Agripay 🎉",
-      html: `
-        <h2>Welcome ${username} 👋</h2>
+      subject: `Welcome ${username} 👋 Your email has been verified successfully ✅`,
+    html: `
+  <h2 style="color:#0b6b4a;">Welcome ${username} 👋</h2>
 
-        <p>Your email has been verified successfully ✅</p>
+  <p>Your email has been verified successfully ✅</p>
 
-        <p>We are happy to have you with us at <b>Agripay Bank</b>.</p>
+  <p>We are happy to have you with us at <b>Agripay Bank</b>.</p>
 
-        <p>You can now start using all our services.</p>
+  <p>You can now start using all our services.</p>
 
-        <br>
+  <br>
 
-        <p>— Agripay Team 💚</p>
-      `
+  <p style="color:#888;">— Agripay Team 💚</p>
+`
     });
 
     console.log("✅ Welcome email sent");
