@@ -156,6 +156,7 @@
 <div class="container">
   <div class="card">
 
+    <!-- 🔥 هنا اللوجو -->
     <div class="logo">
       <img src="C:\Users\youss\OneDrive\Desktop\online banking\online banking\public\image\Picsart_25-10-01_17-11-01-636.png" alt="Bank Logo">
     </div>
@@ -164,7 +165,8 @@
 
     <p class="subtitle">Enter the 6-digit code sent to your email</p>
 
-<div class="email" id="userEmail"></div>
+    <div class="email">m***@gmail.com</div>
+
     <div class="otp-box">
       <input type="text" maxlength="1">
       <input type="text" maxlength="1">
@@ -189,30 +191,6 @@
 </div>
 
 <script>
-  async function loadUserEmail() {
-  const userId = localStorage.getItem("verifyUserId");
-
-  if (!userId) return;
-
-  try {
-    const res = await fetch(`/user/${userId}`);
-    const data = await res.json();
-
-    if (data.email) {
-      document.getElementById("userEmail").textContent = maskEmail(data.email);
-    }
-  } catch (err) {
-    console.log("Error loading email");
-  }
-}
-
-function maskEmail(email) {
-  const [name, domain] = email.split("@");
-  return name.slice(0, 2) + "***@" + domain;
-}
-
-// تشغيلها
-loadUserEmail();
 if (!sessionStorage.getItem("verifyUserId") && !localStorage.getItem("verifyUserId")) {
   window.location.href = "register.html";
 }
