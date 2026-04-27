@@ -22,10 +22,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     return;
   }
 
-  if (!userData._id) {
-    console.log("Invalid user ID");
-    return;
-  }
+  if (!userData?._id) {
+  alert("Invalid session, please login again");
+  window.location.href = "login.html";
+  return;
+}
 
   // =========================
   // 👤 GET USER DATA
@@ -39,7 +40,10 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     const user = await res.json();
 
-    sessionStorage.setItem("currentUser", JSON.stringify(user));
+    sessionStorage.setItem("currentUser", JSON.stringify({
+  ...userData,
+  ...user
+}));
 
     document.getElementById("fullname").textContent =
       `${user.firstName} ${user.lastName}`;
@@ -85,7 +89,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 💸 GET TRANSACTIONS
   // =========================
   try {
-    const res = await fetch("https://agripay.site/transactions/${userData._id}")
+    const res = await fetch(`https://agripay.site/transactions/${userData._id}`)
 
     if (!res.ok) throw new Error("Transactions failed");
 
