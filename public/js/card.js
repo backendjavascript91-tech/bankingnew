@@ -68,7 +68,7 @@ document.addEventListener("DOMContentLoaded", async () => {
   // 💳 GET CARD
   // =========================
   try {
-    const res = await fetch(`/card/${user._id}`);
+    const res = await fetch(`https://agripay.site/card/${user._id}`);
 
     if (!res.ok) throw new Error("Card fetch failed");
 
