@@ -12,16 +12,17 @@ const cardSchema = new mongoose.Schema(
           required: true,
         },
 
-        accountNumber: {
-          type: String,
-          required: true,
-          validate: {
-            validator: function (v) {
-              return /^[0-9]{16}$/.test(v);
-            },
-            message: "Card number must be exactly 16 digits",
-          },
-        },
+   accountNumber: {
+  type: String,
+  required: true,
+  unique: true,
+  validate: {
+    validator: function (v) {
+      return /^[0-9]{16}$/.test(v);
+    },
+    message: "Card number must be exactly 16 digits",
+  },
+},
 
         cardType: {
           type: String,
@@ -43,6 +44,7 @@ const cardSchema = new mongoose.Schema(
           type: String,
           required: true,
         },
+      
       },
       { timestamps: true }
     );

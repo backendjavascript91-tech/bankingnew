@@ -504,6 +504,14 @@ if (user.loginAttempts >= 4) {
         if (!/^[0-9]{16}$/.test(accountNumber)) {
           return res.status(400).json({ message: "Card number must be exactly 16 digits" });
         }
+        // 🚨 منع تكرار رقم الحساب
+               const existingCard = await Card.findOne({ accountNumber });
+
+       if (existingCard) {
+          return res.status(400).json({
+          message: "❌ Card already exists"
+            });
+}
 
         const hashedCardPassword = await bcrypt.hash(cardPassword, SALT_ROUNDS);
 
