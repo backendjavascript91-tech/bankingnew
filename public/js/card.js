@@ -43,10 +43,9 @@ document.addEventListener("DOMContentLoaded", async () => {
   // =========================
   // 🧠 FULL NAME
   // =========================
-  const fullName = `${user.firstName} ${user.lastName}`.toUpperCase();
-
-  liveName.textContent = fullName;
-  cardNameEl.textContent = fullName;
+  const fullName = (user.firstName && user.lastName)
+  ? `${user.firstName} ${user.lastName}`.toUpperCase()
+  : "USER";;
 
   // =========================
   // 📢 MESSAGE
@@ -77,26 +76,29 @@ document.addEventListener("DOMContentLoaded", async () => {
     // ❌ مفيش كارت
     if (!data.card) {
 
-      liveName.textContent = "No Card";
-      liveNumber.textContent = "**** **** **** ****";
-      liveExp.textContent = "--/--";
+  liveName.textContent = "No Card";
+  liveNumber.textContent = "**** **** **** ****";
+  liveExp.textContent = "--/--";
 
-      cardNameEl.textContent = "-";
-      cardNumberEl.textContent = "-";
-      expDateEl.textContent = "-";
-      cardTypeEl.textContent = "-";
+  cardNameEl.textContent = "-";
+  cardNumberEl.textContent = "-";
+  expDateEl.textContent = "-";
+  cardTypeEl.textContent = "-";
 
-      document.querySelector(".payment-form").style.display = "none";
-      addCardBox.style.display = "block";
+  document.querySelector(".payment-form").style.display = "none";
+  addCardBox.style.display = "block";
+// لو فيه كارد
 
-      return;
-    }
+  return;
+}
+document.querySelector(".payment-form").style.display = "block";
+addCardBox.style.display = "none";
 
     // =========================
     // ✅ CARD EXISTS
     // =========================
     const card = data.card;
-
+     
     const fullCardNumber = String(card.accountNumber);
     const last4 = fullCardNumber.slice(-4);
 
