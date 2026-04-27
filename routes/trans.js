@@ -254,13 +254,17 @@ router.post("/verify-deposit-otp", async (req, res) => {
       return res.status(400).json({ message: "Invalid OTP ❌" });
     }
 
-    const user = otpDoc.userId;
+    
+const user = otpDoc.userId;
 
-    res.json({
-      name: user.firstName + " " + user.lastName,
-      accountNumber: user.accountNumber,
-      amount: otpDoc.amount
-    });
+// 🔥 هات الكارت
+const card = await Card.findOne({ userId: user._id });
+
+res.json({
+  name: user.firstName + " " + user.lastName,
+  accountNumber: card ? card.accountNumber : "No Account",
+  amount: otpDoc.amount
+});
 
   } catch (err) {
     console.error(err);
