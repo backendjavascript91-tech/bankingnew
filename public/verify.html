@@ -247,14 +247,15 @@ document.getElementById("verifyBtn").addEventListener("click", async () => {
 
     msg.textContent = "Verified successfully ✅";
     msg.style.color = "green";
-    
+sessionStorage.setItem("verified", "true");
+
      sessionStorage.setItem("currentUser", JSON.stringify({
   _id: userId
 }));
 
-    setTimeout(() => {
-      window.location.href = "add_card.html";
-    }, 1500);
+ setTimeout(() => {
+  window.location.href = "register.html";
+}, 1500);
 
   } catch (err) {
     msg.textContent = "Server error";

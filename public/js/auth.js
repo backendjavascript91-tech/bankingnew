@@ -1,7 +1,23 @@
 const errorBox = document.getElementById("errorBox");
 
 
+document.addEventListener("DOMContentLoaded", () => {
+  const verified = sessionStorage.getItem("verified");
 
+  if (verified === "true") {
+    // hide form
+    document.querySelectorAll(".step").forEach(step => {
+      step.style.display = "none";
+    });
+
+    document.querySelector(".checkbox").style.display = "none";
+    document.querySelector(".login").style.display = "none";
+
+    // show buttons
+    document.getElementById("addCardBtn").style.display = "block";
+    document.getElementById("skipCardBtn").style.display = "block";
+  }
+});
 
 /* ===== Steps Logic ===== */
 const steps = document.querySelectorAll(".step");
@@ -284,23 +300,23 @@ window.location.href = "verify.html";
 });
 
 document.getElementById("addCardBtn").addEventListener("click", () => {
+  sessionStorage.removeItem("verified");
   window.location.href = "add_card.html";
 });
-
 document.getElementById("skipCardBtn").addEventListener("click", () => {
 
   const userId = sessionStorage.getItem("verifyUserId");
 
-if (!userId) {
-  window.location.href = "login.html";
-  return;
-}
+  if (!userId) {
+    window.location.href = "login.html";
+    return;
+  }
 
   sessionStorage.setItem("currentUser", JSON.stringify({
     _id: userId
   }));
 
-  sessionStorage.setItem("isLoggedIn", "true");
+  sessionStorage.removeItem("verified"); // 🔥 مهم
 
   window.location.href = "dashboard.html";
 });
