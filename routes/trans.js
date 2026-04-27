@@ -230,5 +230,96 @@ router.post("/withdraw", async (req, res) => {
     res.status(500).json({ message: "Server error ❌" });
   }
 });
+router.post("/verify-deposit-otp", async (req, res) => {
+  try {
+    const { otp } = req.body;
 
+    if (!otp) {
+      return res.status(400).json({ message: "OTP required ❌" });
+    }
+
+    const otpDoc = await Otp.findOne({
+      type: "deposit",
+      used: false,
+      expiresAt: { $gt: new Date() }
+    }).populate("userId");
+
+    if (!otpDoc) {
+      return res.status(400).json({ message: "OTP expired ❌" });
+    }
+
+    const isValid = await bcrypt.compare(otp, otpDoc.otpHash);
+
+    if (!isValid) {
+      return res.status(400).json({ message: "Invalid OTP ❌" });
+    }
+
+    const user = otpDoc.userId;
+
+    res.json({
+      name: user.firstName + " " + user.lastName,
+      accountNumber: user.accountNumber,
+      amount: otpDoc.amount
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error ❌" });
+  }
+});
+
+router.post("/complete-deposit", async (req, res) => {
+  try {
+    const { otp } = req.body;
+
+    if (!otp) {
+      return res.status(400).json({ message: "OTP required ❌" });
+    }
+
+    const otpDoc = await Otp.findOne({
+      type: "deposit",
+      used: false,
+      expiresAt: { $gt: new Date() }
+    }).populate("userId");
+
+    if (!otpDoc) {
+      return res.status(400).json({ message: "OTP expired ❌" });
+    }
+
+    const isValid = await bcrypt.compare(otp, otpDoc.otpHash);
+
+    if (!isValid) {
+      return res.status(400).json({ message: "Invalid OTP ❌" });
+    }
+
+    const user = otpDoc.userId;
+
+    // 💰 زيادة الرصيد
+    user.balance += otpDoc.amount;
+    await user.save();
+
+    // 🧾 تسجيل العملية
+    await Transaction.create({
+      userId: user._id,
+      amount: otpDoc.amount,
+      type: "deposit",
+      source: "ATM",
+      direction: "in",
+      createdAt: new Date()
+    });
+
+    // 🔒 قفل OTP
+    otpDoc.used = true;
+    await otpDoc.save();
+
+    res.json({
+      message: "Deposit successful 💰",
+      newBalance: user.balance
+    });
+
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ message: "Server error ❌" });
+  }
+});
 module.exports = router;
