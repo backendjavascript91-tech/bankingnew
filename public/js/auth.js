@@ -256,8 +256,9 @@ try {
 
 showSuccess("Account created successfully 🎉 Redirecting...");
 document.querySelector('button[type="submit"]').disabled = true;
-localStorage.setItem("verifyUserId", data.userId);
-localStorage.setItem("userEmail", email);
+sessionStorage.setItem("verifyUserId", data.userId);
+
+sessionStorage.setItem("userEmail", email);
 
 window.location.href = "verify.html";
 
