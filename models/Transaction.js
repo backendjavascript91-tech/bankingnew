@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+
 const TransactionSchema = new mongoose.Schema(
   {
     userId: {
@@ -9,7 +10,7 @@ const TransactionSchema = new mongoose.Schema(
 
     type: {
       type: String,
-enum: ["withdrawal", "deposit", "bank", "wallet"],
+      enum: ["withdrawal", "deposit", "bank", "wallet"],
       required: true
     },
 
@@ -32,11 +33,15 @@ enum: ["withdrawal", "deposit", "bank", "wallet"],
     },
 
     direction: {
-      type: String, // "in" | "out"
-    }
+      type: String // "in" | "out"
+    },
+
+    // 🔥 هنا مكانه الصح
+    atmCode: String
+
   },
   {
-    timestamps: true   // ⭐⭐⭐ السطر المهم جدًا
+    timestamps: true
   }
 );
 

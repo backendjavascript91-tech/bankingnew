@@ -108,10 +108,20 @@ document.addEventListener("DOMContentLoaded", async () => {
       let amountSign = "";
 
       if (t.source === "ATM") {
-        title = "ATM Transaction";
-        details = `Type: ${t.type}`;
-      }
 
+  if (t.type === "withdrawal") {
+    title = "ATM Withdrawal 💸";
+    details = `ATM Code: ${t.atmCode || "N/A"}`;
+    amountSign = "-";
+  }
+
+  else if (t.type === "deposit") {
+    title = "ATM Deposit 💰";
+    details = `Cash Deposit`;
+    amountSign = "+";
+  }
+
+}
       else if (t.direction === "out") {
         title = "Transfer Sent";
         details = `
@@ -163,33 +173,67 @@ document.addEventListener("DOMContentLoaded", async () => {
       // =========================
       box.addEventListener("click", () => {
 
-        const overlay = document.getElementById("transactionOverlay");
+  const overlay = document.getElementById("transactionOverlay");
 
-        document.getElementById("modalAmount").textContent =
-          t.amount + " EGP";
+  document.getElementById("modalAmount").textContent =
+    t.amount + " EGP";
 
-        document.getElementById("modalFromName").textContent =
-          t.senderName || "You";
+  // 🔥 ATM logic
+  if (t.source === "ATM") {
 
-        document.getElementById("modalFromNumber").textContent =
-          currentAccountNumber;
+    if (t.type === "withdrawal") {
 
-        document.getElementById("modalToName").textContent =
-          t.source === "Wallet"
-            ? "Wallet"
-            : t.beneficiaryName || "Receiver";
+      document.getElementById("modalFromName").textContent = "Your Account";
+      document.getElementById("modalFromNumber").textContent = currentAccountNumber;
 
-        document.getElementById("modalToNumber").textContent =
-          t.beneficiaryAccount || "----";
+      document.getElementById("modalToName").textContent = "ATM Machine";
+      document.getElementById("modalToNumber").textContent = t.atmCode || "ATM";
 
-        document.getElementById("modalBank").textContent =
-          t.source;
+      document.getElementById("modalBank").textContent = "ATM Withdrawal";
 
-        document.getElementById("modalDate").textContent =
-          new Date(t.createdAt).toLocaleString();
+    }
 
-        overlay.classList.add("active");
-      });
+    else if (t.type === "deposit") {
+
+      document.getElementById("modalFromName").textContent = "ATM Machine";
+      document.getElementById("modalFromNumber").textContent = "Cash";
+
+      document.getElementById("modalToName").textContent = "Your Account";
+      document.getElementById("modalToNumber").textContent = currentAccountNumber;
+
+      document.getElementById("modalBank").textContent = "ATM Deposit";
+
+    }
+
+  }
+
+  // 🔵 تحويل عادي
+  else {
+
+    document.getElementById("modalFromName").textContent =
+      t.senderName || "You";
+
+    document.getElementById("modalFromNumber").textContent =
+      currentAccountNumber;
+
+    document.getElementById("modalToName").textContent =
+      t.source === "Wallet"
+        ? "Wallet"
+        : t.beneficiaryName || "Receiver";
+
+    document.getElementById("modalToNumber").textContent =
+      t.beneficiaryAccount || "----";
+
+    document.getElementById("modalBank").textContent =
+      t.source;
+  }
+
+  document.getElementById("modalDate").textContent =
+    new Date(t.createdAt).toLocaleString();
+
+  overlay.classList.add("active");
+
+});
 
     });
 
