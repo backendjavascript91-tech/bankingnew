@@ -33,13 +33,18 @@ document.addEventListener("DOMContentLoaded", () => {
     btn.textContent = "Logging in...";
 
     try {
-      const response = await fetch(`https://agripay.site/login`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json"
-        },
-        body: JSON.stringify({ username, password })
-      });
+const API = "https://banking-api.onrender.com";
+
+const res = await fetch(`${API}/api/login`, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json"
+  },
+  body: JSON.stringify({
+    username,
+    password
+  })
+});
 
       let data;
       try {
