@@ -252,9 +252,10 @@ sessionStorage.setItem("verified", "true");
      sessionStorage.setItem("currentUser", JSON.stringify({
   _id: userId
 }));
+sessionStorage.setItem("isLoggedIn", "true");
 
  setTimeout(() => {
-  window.location.href = "register.html";
+  window.location.href = "dashboard.html";
 }, 1500);
 
   } catch (err) {
