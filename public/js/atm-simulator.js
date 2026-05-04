@@ -67,7 +67,7 @@ if (!user) {
 
       showMessage("Processing...", "success");
 
-      const res = await fetch(`https://agripay.online/atm/withdraw`, {
+      const res = await fetch(`https://bankingnew.onrender.com/atm/withdraw`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

@@ -80,7 +80,7 @@ document.addEventListener("DOMContentLoaded", () => {
       insertBtn.disabled = true;
       showMessage("Processing deposit...", "success");
 
-      const res = await fetch(`https://agripay.online/atm/complete-deposit`, {
+      const res = await fetch(`https://bankingnew.onrender.com/atm/complete-deposit`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"

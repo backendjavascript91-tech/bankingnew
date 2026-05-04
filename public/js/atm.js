@@ -278,7 +278,7 @@ if (depositBtn) {
     }
 
     try {
-      const res = await fetch(`https://agripay.online/atm/generate-deposit-otp`, {
+      const res = await fetch(`https://bankingnew.onrender.com/atm/generate-deposit-otp`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json"
